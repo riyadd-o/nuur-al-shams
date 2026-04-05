@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <title>Admin Dashboard | Nuur Al Shams</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* Dashbord/Edit specific modal styling */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 1px solid var(--accent-gold);
+            padding: 30px;
+            border-radius: 20px;
+            z-index: 2500;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .edit-modal h3 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+        .edit-form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .edit-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        .edit-form-group input, .edit-form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+        .edit-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        #editOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2400;
+        }
+    </style>
+</head>
+<body>
+
+     <div class="admin-header">
+        <h1 class="school-logo" style="color: var(--accent-gold); font-family: 'Amiri', serif;">Nuur Al Shams Dashboard</h1>
+         <div style="display: flex; gap: 20px; align-items: center;">
+            <span id="adminName">Welcome</span>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 5px;">Total Students</p>
+                <h2 id="totalStudents" style="font-size: 2.2rem; margin-bottom: 8px;">0</h2>
+                <div style="display: flex; gap: 15px; font-size: 0.85rem; color: var(--text-gray);">
+                    <span id="maleCount" style="background: rgba(52, 152, 219, 0.15); color: #3498db; padding: 2px 10px; border-radius: 20px;">M: 0</span>
+                    <span id="femaleCount" style="background: rgba(231, 76, 60, 0.15); color: #e74c3c; padding: 2px 10px; border-radius: 20px;">F: 0</span>
+                </div>
+            </div>
+            <div class="stat-card" style="border-left-color: var(--accent-gold);">
+                <p style="color: var(--text-gray); font-size: 0.9rem;">Quran Student</p>
+                <h2 id="quranCount" style="font-size: 2.2rem;">0</h2>
+            </div>
+            <div class="stat-card" style="border-left-color: #3498db;">
+                <p style="color: var(--text-gray); font-size: 0.9rem;">Kitab Student</p>
+                <h2 id="kitabCount" style="font-size: 2.2rem;">0</h2>
+            </div>
+            <div class="stat-card" style="border-left-color: #27ae60;">
+                <p style="color: var(--text-gray); font-size: 0.9rem;">Aliif student</p>
+                <h2 id="aliifaCount" style="font-size: 2.2rem;">0</h2>
+            </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="sticky-search-container" style="display: flex; justify-content: space-between; margin-bottom: 20px; gap: 20px; flex-wrap: wrap; align-items: flex-end;">
+            <div style="flex: 1; max-width: 400px;">
+                <p id="searchLabel" style="font-size: 0.75rem; color: var(--text-gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; padding-left: 15px;">Search by Name</p>
+                <div style="position: relative;">
+                    <input type="text" class="search-bar" id="studentSearch" placeholder="Insert name..." oninput="filterStudents()" style="padding-right: 45px;">
+                    <button onclick="toggleSearchMode()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--accent-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;" title="Toggle Search Mode">
+                        <svg id="searchModeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 2.1l4 4-4 4"></path>
+                            <path d="M3 12.2v-2a4 4 0 0 1 4-4h14"></path>
+                            <path d="M7 21.9l-4-4 4-4"></path>
+                            <path d="M21 11.8v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Selection Area (Top Right) -->
+            <div id="selectionBar" class="selection-bar" style="margin-bottom: 5px;">
+                <span class="selection-count">Select (0)</span>
+                <button id="deleteSelectedBtn" class="btn-batch-delete" onclick="openDeleteModal()" title="Delete Selected">🗑️</button>
+                <button class="btn-exit-selection" onclick="exitSelectionMode()">Exit</button>
+            </div>
+        </div>
+
+
+        <!-- Students Table -->
+        <div class="table-container">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th class="row-checkbox-cell"></th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Phone</th>
+                        <th>Level</th>
+                        <th>Date</th>
+                        <th>Payment</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Dynamic Data -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="studentDetailModal" class="detail-modal-container">
+        <div class="detail-modal-overlay" onclick="closeStudentDetail()"></div>
+        <div class="detail-modal-content">
+            <div class="detail-modal-header">
+                <h2>Student Details</h2>
+                <button class="btn-close-detail" onclick="closeStudentDetail()">✕</button>
+            </div>
+            <div class="detail-tabs">
+                <button class="detail-tab active" onclick="openDetailTab(event, 'info')">Info</button>
+                <button class="detail-tab" onclick="openDetailTab(event, 'documents')">Documents</button>
+                <button class="detail-tab" onclick="openDetailTab(event, 'payment')">Payment</button>
+            </div>
+            <div class="detail-body">
+                <!-- Info Tab -->
+                <div id="tab-info" class="detail-tab-pane active">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Full Name</label>
+                            <p id="det-name">-</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Age</label>
+                            <p id="det-age">-</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Sex</label>
+                            <p id="det-sex">-</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Kebele</label>
+                            <p id="det-kebele">-</p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>Family Relation</label>
+                            <p id="det-relation">-</p>
+                        </div>
+                        <div class="detail-item full-width">
+                            <label>Medical Condition</label>
+                            <p id="det-medical">-</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Documents Tab -->
+                <div id="tab-documents" class="detail-tab-pane">
+                    <div class="doc-images-grid">
+                        <div class="doc-box">
+                            <label>Student Photo</label>
+                            <img id="det-student-photo" src="" alt="Student Photo">
+                        </div>
+                        <div class="doc-box">
+                            <label>Family/Guardian</label>
+                            <img id="det-family-photo" src="" alt="Family Photo">
+                        </div>
+                        <div class="doc-box full-width">
+                            <label>National ID - Front</label>
+                            <img id="det-id-front" src="" alt="National ID Front">
+                        </div>
+                        <div class="doc-box full-width">
+                            <label>National ID - Back</label>
+                            <img id="det-id-back" src="" alt="National ID Back">
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Tab -->
+                <div id="tab-payment" class="detail-tab-pane">
+                    <div class="payment-summary">
+                         <div class="detail-item">
+                            <label>Status</label>
+                            <p class="status-paid">Paid <span class="pay-check-v2">✔</span></p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Amount</label>
+                            <p id="det-payment-amount">-</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Bank</label>
+                            <p id="det-payment-bank">-</p>
+                        </div>
+                    </div>
+                    <div class="doc-box full-width mt-15">
+                        <label>Receipt Image</label>
+                        <img id="det-receipt" src="" alt="Payment Receipt">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Delete Modal -->
+    <div id="deleteModal" class="custom-modal">
+        <div class="modal-box">
+            <h3>Confirm Deletion</h3>
+            <p id="deleteModalText">Are you sure you want to DELETE selected students?</p>
+            <div class="modal-btns">
+                <button id="confirmDeleteBtn" class="btn-delete-confirm" onclick="executeDelete()">Delete</button>
+                <button onclick="closeDeleteModal()" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 1. Supabase Initialization
+            if (!window.supabaseClient) {
+                window.supabaseClient = window.supabase.createClient(
+                    "https://cegsatrugfhtiwkasicg.supabase.co",
+                    "sb_publishable_e6dEu6oTadTIAAK3rKf0qw_eGXXisGK"
+                );
+            }
+            const supabase = window.supabaseClient;
+
+            let students = [];
+            let searchMode = 'name'; // 'name' or 'phone'
+
+            window.toggleSearchMode = function() {
+                searchMode = searchMode === 'name' ? 'phone' : 'name';
+                const input = document.getElementById('studentSearch');
+                const label = document.getElementById('searchLabel');
+                const icon = document.getElementById('searchModeIcon');
+                
+                if (searchMode === 'name') {
+                    label.innerText = 'Search by Name';
+                    input.placeholder = 'Insert name...';
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    label.innerText = 'Search by Phone';
+                    input.placeholder = 'Insert phone...';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+                input.value = '';
+                renderTable(students);
+            };
+
+
+            // 3. Data Loading
+            // HELPER: Extract Storage Path from Public URL
+            function getStoragePath(url) {
+                if (!url) return null;
+                // Standardize bucket name
+                const BUCKET = 'student-files';
+                
+                // If it's a JSON string (old ID format), parse it and get paths recursively
+                if (typeof url === 'string' && url.startsWith('{')) {
+                    try {
+                        const data = JSON.parse(url);
+                        return Object.values(data).map(u => getStoragePath(u)).flat();
+                    } catch (e) { return null; }
+                }
+
+                // If it's already an array (recursive cases)
+                if (Array.isArray(url)) {
+                    return url.map(u => getStoragePath(u)).flat();
+                }
+
+                // Extract path after bucket name
+                // e.g. https://.../student-files/student_photos/123.jpg -> student_photos/123.jpg
+                if (url.includes(BUCKET + '/')) {
+                    return url.split(BUCKET + '/').pop();
+                }
+
+                // Fallback for old bucket names or direct filenames
+                return url.split('/').pop();
+            }
+
+            window.loadStudents = async function() {
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (!session) {
+                    window.location.href = "admin-login.html";
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error("Error loading students:", error.message);
+                    return;
+                }
+                
+                students = data || [];
+                updateStats();
+                renderTable(students);
+            };
+
+            function updateStats() {
+                document.getElementById('totalStudents').innerText = students.length;
+                document.getElementById('quranCount').innerText = students.filter(s => s.level_of_study && s.level_of_study.includes('Quran')).length;
+                document.getElementById('kitabCount').innerText = students.filter(s => s.level_of_study && s.level_of_study.includes('Kitab')).length;
+                document.getElementById('aliifaCount').innerText = students.filter(s => s.level_of_study && s.level_of_study.includes('Aliifa')).length;
+                
+                // M/F counts (Using 'sex' column from Supabase)
+                const males = students.filter(s => s.sex === 'Male' || s.sex === 'M').length;
+                const females = students.filter(s => s.sex === 'Female' || s.sex === 'F').length;
+                
+                document.getElementById('maleCount').innerText = `M: ${males}`;
+                document.getElementById('femaleCount').innerText = `F: ${females}`;
+            }
+
+            let selectionMode = false;
+            let selectedIds = new Set();
+            let longPressTimer;
+
+            // Modal Control Functions
+            window.openDeleteModal = function() {
+                if (selectedIds.size === 0) return;
+                console.log("Opening modal");
+                const modal = document.getElementById('deleteModal');
+                if (!modal) {
+                    console.error("Delete modal not found");
+                    return;
+                }
+                const p = document.getElementById('deleteModalText');
+                const count = selectedIds.size;
+                p.innerText = `Are you sure you want to DELETE ${count} selected student${count > 1 ? 's' : ''}?`;
+                modal.classList.add('active');
+            };
+
+            window.closeDeleteModal = function() {
+                const modal = document.getElementById('deleteModal');
+                if (!modal) return;
+                // Simple validation clear for DOB
+                const dobInput = document.getElementById('dob');
+                if (dobInput) {
+                    dobInput.addEventListener('input', () => {
+                        dobInput.classList.remove('invalid-field');
+                        const err = dobInput.parentNode.querySelector('.error-message');
+                        if (err) err.style.display = 'none';
+                    });
+                }
+                modal.classList.remove('active');
+            };
+
+            function renderTable(data) {
+                const body = document.getElementById('studentTableBody');
+                body.innerHTML = '';
+
+                if (data.length === 0) {
+                    body.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">No student found.</td></tr>';
+                    return;
+                }
+
+
+
+                const table = document.getElementById('studentsTable');
+                if (selectionMode) table.classList.add('selection-mode');
+                else table.classList.remove('selection-mode');
+
+                data.forEach((student, index) => {
+                    const isSelected = selectedIds.has(student.id);
+                    const type = student.student_type || 'Regular';
+                    const typeLabel = type === 'New' ? 'New' : 'Reg';
+                    const typeClass = type === 'New' ? 'type-new' : 'type-reg';
+                    const method = student.payment_method || 'EBirr';
+                    
+                    let amount = 0;
+                    if (student.level_of_study) {
+                        if (student.level_of_study.includes('Quran')) amount = 500;
+                        else if (student.level_of_study.includes('Kitab')) amount = 600;
+                        else if (student.level_of_study.includes('Aliifa')) amount = 400;
+                    }
+
+                    const formattedDate = (dateStr) => {
+                        if (!dateStr) return 'N/A';
+                        const date = new Date(dateStr);
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        return `${months[date.getMonth()]}-${date.getDate()}-${date.getFullYear().toString().slice(-2)}`;
+                    };
+
+                    const row = document.createElement('tr');
+                    if (isSelected) row.classList.add('selected');
+                    row.id = `row-${student.id}`;
+                    
+                    row.innerHTML = `
+                        <td class="row-checkbox-cell">
+                            <input type="checkbox" class="row-checkbox" ${isSelected ? 'checked' : ''} 
+                                   onclick="handleCheckboxClick(event, '${student.id}')">
+                        </td>
+                        <td><img src="${student.student_photo_url || 'https://via.placeholder.com/50'}" class="student-thumb"></td>
+                        <td style="font-weight: 500;">${student.full_name || 'N/A'}</td>
+                        <td><span class="type-badge ${typeClass}">${typeLabel}</span></td>
+                        <td>${student.phone || 'N/A'}</td>
+                        <td>${student.level_of_study || 'N/A'}</td>
+                        <td style="font-size: 0.85rem; color: var(--text-gray);">${formattedDate(student.created_at)}</td>
+                        <td>
+                            <div class="pay-column-v2">
+                                <span class="pay-method-v2">${method}</span>
+                                <span class="pay-amount-v2">${amount} <span class="pay-check-v2">✔</span></span>
+                            </div>
+                        </td>
+                        <td><a href="#" class="detail-link" onclick="openStudentDetail('${student.id}'); return false;">Detail</a></td>
+                    `;
+
+
+
+                    // Selection Interaction (Mobile Long-press + Desktop Right-click)
+                    let pressTimer;
+                    const startPress = (e) => {
+                        if (selectionMode) return;
+                        pressTimer = setTimeout(() => {
+                            enterSelectionMode(student.id);
+                        }, 500);
+                    };
+                    const cancelPress = () => clearTimeout(pressTimer);
+
+                    row.addEventListener('touchstart', startPress, { passive: true });
+                    row.addEventListener('touchend', cancelPress);
+                    row.addEventListener('touchmove', cancelPress);
+                    row.addEventListener('mousedown', startPress);
+                    row.addEventListener('mouseup', cancelPress);
+                    row.addEventListener('mouseleave', cancelPress);
+
+                    // Click to toggle ONLY in selection mode
+                    row.onclick = () => {
+                        if (selectionMode) toggleSelection(student.id);
+                    };
+
+
+                    // Desktop Right Click
+                    row.oncontextmenu = (e) => {
+                        e.preventDefault();
+                        if (!selectionMode) enterSelectionMode(student.id);
+                        else toggleSelection(student.id);
+                    };
+
+
+                    body.appendChild(row);
+                });
+            }
+
+            // Selection Logic
+            window.handleCheckboxClick = function(e, id) {
+                e.stopPropagation();
+                toggleSelection(id);
+            };
+
+            function enterSelectionMode(firstId) {
+                selectionMode = true;
+                selectedIds.clear();
+                if (firstId) selectedIds.add(firstId);
+                updateSelectionUI();
+                renderTable(students);
+            }
+
+            window.exitSelectionMode = function() {
+                selectionMode = false;
+                selectedIds.clear();
+                updateSelectionUI();
+                renderTable(students);
+            };
+
+            function toggleSelection(id) {
+                if (selectedIds.has(id)) selectedIds.delete(id);
+                else selectedIds.add(id);
+                
+                if (selectedIds.size === 0 && selectionMode) {
+                    exitSelectionMode();
+                } else {
+                    updateSelectionUI();
+                    const row = document.getElementById(`row-${id}`);
+                    if (row) {
+                        const checkbox = row.querySelector('.row-checkbox');
+                        if (selectedIds.has(id)) {
+                            row.classList.add('selected');
+                            if (checkbox) checkbox.checked = true;
+                        } else {
+                            row.classList.remove('selected');
+                            if (checkbox) checkbox.checked = false;
+                        }
+                    }
+                }
+            }
+
+            function updateSelectionUI() {
+                const bar = document.getElementById('selectionBar');
+                const countText = bar.querySelector('.selection-count');
+                if (selectionMode) {
+                    bar.classList.add('active');
+                    countText.innerText = `Select (${selectedIds.size})`;
+                } else {
+                    bar.classList.remove('active');
+                }
+            }
+
+            window.executeDelete = async function() {
+                const btn = document.getElementById('confirmDeleteBtn');
+                const originalText = btn.innerText;
+                btn.innerText = "Deleting...";
+                btn.disabled = true;
+
+                try {
+                    const idsArray = Array.from(selectedIds);
+                    for (const studentId of idsArray) {
+                        const student = students.find(s => s.id === studentId);
+                        if (!student) continue;
+
+                        // Delete files
+                        const fileFields = [
+                            student.student_photo_url, student.family_photo_url,
+                            student.id_front_url, student.id_back_url, student.receipt_url
+                        ];
+
+                        const paths = fileFields.map(f => getStoragePath(f)).flat().filter(p => p && typeof p === 'string');
+                        const uniquePaths = [...new Set(paths)];
+
+                        if (uniquePaths.length > 0) {
+                            for (const bucket of ['student-files', 'student-photos']) {
+                                await supabase.storage.from(bucket).remove(uniquePaths);
+                            }
+                        }
+
+                        // Delete DB
+                        const { error } = await supabase.from('students').delete().eq('id', studentId);
+                        if (error) throw error;
+                    }
+
+                    // Refresh and Cleanup
+                    await loadStudents();
+                    exitSelectionMode();
+                    closeDeleteModal();
+
+                } catch (err) {
+                    console.error("Delete failed:", err.message);
+                } finally {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            };
+
+
+            window.filterStudents = function() {
+                const query = document.getElementById('studentSearch').value.toLowerCase();
+                const filtered = students.filter(s => {
+                    if (searchMode === 'name') {
+                        return s.full_name && s.full_name.toLowerCase().includes(query);
+                    } else {
+                        return s.phone && s.phone.toLowerCase().includes(query);
+                    }
+                });
+                renderTable(filtered);
+
+                if (window.innerWidth < 768 && query.length > 0) {
+                    const firstRow = document.querySelector('#studentTableBody tr[id^="row-"]');
+                    if (firstRow) {
+                        setTimeout(() => {
+                            firstRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 50);
+                    }
+                }
+            };
+
+
+            // 4. Detail Modal Logic
+            window.openStudentDetail = function(id) {
+                const student = students.find(s => s.id === id);
+                if (!student) return;
+                
+                // Populate Info
+                document.getElementById('det-name').innerText = student.full_name || 'N/A';
+                document.getElementById('det-age').innerText = student.age || 'N/A';
+                document.getElementById('det-sex').innerText = student.sex || 'N/A';
+                document.getElementById('det-kebele').innerText = student.kebele || 'N/A';
+                document.getElementById('det-relation').innerText = student.relation_to_student || 'N/A';
+                document.getElementById('det-medical').innerText = student.medical_condition || 'None';
+
+                // Populate Images
+                const setImg = (id, url) => {
+                     const img = document.getElementById(id);
+                     if (url) {
+                         img.src = url;
+                         img.style.display = 'block';
+                     } else {
+                         img.style.display = 'none';
+                     }
+                };
+                setImg('det-student-photo', student.student_photo_url);
+                setImg('det-family-photo', student.family_photo_url);
+                setImg('det-id-front', student.id_front_url);
+                setImg('det-id-back', student.id_back_url);
+                setImg('det-receipt', student.receipt_url);
+
+                // Populate Payment
+                let amount = 0;
+                if (student.level_of_study) {
+                    if (student.level_of_study.includes('Quran')) amount = 500;
+                    else if (student.level_of_study.includes('Kitab')) amount = 600;
+                    else if (student.level_of_study.includes('Aliifa')) amount = 400;
+                }
+                document.getElementById('det-payment-amount').innerText = amount > 0 ? amount + ' ETB' : 'N/A';
+                document.getElementById('det-payment-bank').innerText = student.payment_method || 'EBirr';
+
+                // Open Modal
+                document.getElementById('studentDetailModal').classList.add('active');
+                // Reset tabs to info
+                openDetailTab(null, 'info');
+            };
+
+            window.closeStudentDetail = function() {
+                document.getElementById('studentDetailModal').classList.remove('active');
+            };
+
+            window.openDetailTab = function(event, tabId) {
+                // Update tabs
+                document.querySelectorAll('.detail-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.detail-tab-pane').forEach(pane => pane.classList.remove('active'));
+
+                if(event) {
+                    event.currentTarget.classList.add('active');
+                } else {
+                    document.querySelector('.detail-tab').classList.add('active'); // Defaults to first which is info
+                }
+                
+                document.getElementById('tab-' + tabId).classList.add('active');
+            };
+
+            // 5. Init
+            document.addEventListener('DOMContentLoaded', loadStudents);
+            if (document.readyState === "complete" || document.readyState === "interactive") loadStudents();
+
+            // 6. Fix for mobile keyboard pushing search input out of view
+            const searchInputObj = document.getElementById('studentSearch');
+            if (searchInputObj) {
+                searchInputObj.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        searchInputObj.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            }
+
+        })();
+    </script>
+</body>
+</html>

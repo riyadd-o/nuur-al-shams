@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <title>Admin Login | Nuur Al Shams</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        }
+        /* Unified Input Styling for Email and Password */
+        #email, #password {
+            width: 100%; 
+            padding: 12px; 
+            background: #252525; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+        #email:focus, #password:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h1 class="school-logo">Nuur Al Shams</h1>
+            <h2 style="color: var(--accent-gold); margin-bottom: 30px;">Admin Portal</h2>
+            
+            <form id="loginForm" novalidate>
+                <div class="form-group" style="text-align: left;">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter admin email" autocapitalize="none" autocorrect="off">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" autocapitalize="none" autocorrect="off">
+                </div>
+                
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Supabase Initialization
+            if (!window.supabaseClient) {
+                window.supabaseClient = window.supabase.createClient(
+                    "https://cegsatrugfhtiwkasicg.supabase.co",
+                    "sb_publishable_e6dEu6oTadTIAAK3rKf0qw_eGXXisGK"
+                );
+            }
+            const supabase = window.supabaseClient;
+
+            // Modern Validation Helpers
+            function showError(element, message = "This field is required") {
+                element.classList.add('invalid-field');
+                
+                let errorSpan = element.parentNode.querySelector('.error-message');
+                if (!errorSpan) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.className = 'error-message';
+                    element.parentNode.appendChild(errorSpan);
+                }
+                errorSpan.innerText = message;
+                errorSpan.style.display = 'block';
+
+                const clearFn = () => {
+                    element.classList.remove('invalid-field');
+                    errorSpan.style.display = 'none';
+                };
+
+                element.addEventListener('input', clearFn, { once: true });
+                element.addEventListener('change', clearFn, { once: true });
+                element.addEventListener('focus', clearFn, { once: true });
+            }
+
+            function clearErrors() {
+                document.querySelectorAll('.invalid-field').forEach(el => el.classList.remove('invalid-field'));
+                document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            }
+
+            // Check if already authenticated
+            async function checkSession() {
+                const { data, error } = await supabase.auth.getSession();
+                if (data?.session) {
+                    window.location.href = 'admin-dashboard.html';
+                }
+            }
+            checkSession();
+
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                clearErrors();
+                
+                const emailEl = document.getElementById('email');
+                const passEl = document.getElementById('password');
+                const loginBtn = this.querySelector('button[type="submit"]');
+
+                let hasError = false;
+
+                if (!emailEl.value.trim()) {
+                    showError(emailEl, "Required");
+                    hasError = true;
+                }
+
+                if (!passEl.value.trim()) {
+                    showError(passEl, "Required");
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                const originalBtnText = loginBtn.innerText;
+                loginBtn.innerText = 'Authenticating...';
+                loginBtn.disabled = true;
+
+                try {
+                    // Supabase Auth Login - Normalize email to lowercase for robustness
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: emailEl.value.trim().toLowerCase(),
+                        password: passEl.value.trim()
+                    });
+
+                    if (error) {
+                        console.error("Supabase Auth Error:", error.message);
+                        showError(emailEl, "Invalid email or password");
+                        showError(passEl, "Invalid email or password");
+                    } else if (data?.session) {
+                        console.log("Login successful, redirecting...");
+                        sessionStorage.setItem('isAdmin', 'true');
+                        window.location.href = 'admin-dashboard.html';
+                    }
+                } catch (err) {
+                    console.error("Unexpected Login Error:", err);
+                    showError(emailEl, "Connection error. Please try again.");
+                } finally {
+                    loginBtn.innerText = originalBtnText;
+                    loginBtn.disabled = false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

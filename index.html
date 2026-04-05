@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <title>Nuur Al Shams | Student Registration</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+
+
+        /* Modern Side-by-Side Split Section */
+        .split-section {
+            padding: 80px 20px;
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        .split-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* Left Content Area */
+        .split-left {
+            position: relative;
+            z-index: 2;
+        }
+
+        .split-intro-badge {
+            display: inline-block;
+            background: rgba(0, 200, 150, 0.1);
+            color: var(--accent-emerald);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 200, 150, 0.2);
+        }
+
+        .split-title {
+            font-size: 2.8rem;
+            color: var(--text-white);
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+
+        .split-desc {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 35px;
+            max-width: 500px;
+        }
+
+        .btn-about-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-secondary);
+            color: var(--accent-gold);
+            padding: 14px 32px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-about-link:hover {
+            background: var(--accent-gold);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Right Cinematic Grid */
+        .split-right {
+            position: relative;
+        }
+
+        .cinema-grid-asym {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            height: 500px;
+            gap: 15px;
+        }
+
+        .cg-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: transform 0.5s ease;
+        }
+
+        .cg-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .cg-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Asymmetric positioning */
+        .item-1 { grid-area: 1 / 1 / 5 / 4; } /* Large main */
+        .item-2 { grid-area: 2 / 4 / 4 / 7; } /* Wide top right */
+        .item-3 { grid-area: 5 / 1 / 7 / 3; } /* Bottom left tall */
+        .item-4 { grid-area: 4 / 3 / 7 / 6; } /* Overlapping middle */
+        .item-5 { grid-area: 4 / 6 / 6 / 7; } /* Small detail */
+
+        @media (max-width: 968px) {
+            .split-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+            .split-desc {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .cinema-grid-asym {
+                height: 400px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            .split-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body class="form-page">
+
+    <!-- Header Section -->
+    <header id="top">
+        <div class="container">
+            <h1 class="school-name-en">Nuur Al Shams</h1>
+            <h2 class="school-name-ar">مركزة نور الشمس</h2>
+            <p class="quote-ar">"مع القرآن.. من القمة إلى القمة"</p>
+        </div>
+    </header>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition-overlay"></div>
+
+    <!-- Navigation Menu (Modern Hamburger) -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <nav id="mainNav">
+        <button class="nav-hamburger" id="hamburgerBtn" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Side Slide Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h2>MENU</h2>
+        </div>
+        <div class="side-menu-links">
+            <a href="index.html#top" class="menu-link active">Home</a>
+            <a href="index.html#register" class="menu-link">Register Now</a>
+            <a href="learn-more.html" class="menu-link">About Us</a>
+            <a href="learn-more.html#contact-section" class="menu-link">Contact Us</a>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════ PREMIUM HERO ═══════════════════════════ -->
+    <section class="hero-premium" style="min-height: 80vh;">
+        <div class="hero-bg">
+            <div class="hero-bg-wave wave1"></div>
+            <div class="hero-bg-wave wave2"></div>
+            <div class="hero-bg-wave wave3"></div>
+            <div class="hero-geo-overlay"></div>
+        </div>
+        <div class="hero-inner container" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+            <div class="hero-glass" style="padding: 40px; max-width: 800px; border-radius: 20px;">
+                <span class="hero-badge">Quran School - Ethiopia</span>
+                <h1 class="hero-title-en" style="font-size: 3.5rem; background: linear-gradient(90deg, #d4af37, #00c896); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">Join the Knowledge Journey</h1>
+                <div class="hero-divider" style="margin: 20px auto;"></div>
+                <h2 class="hero-title-ar">مركزة نور الشمس</h2>
+                <p class="hero-desc" style="max-width: 100%;">
+                    Nurturing a generation through the wisdom of the Holy Quran.<br>
+                    Start your student's registration below.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════ SIDE-BY-SIDE SECTION ═══════════════════════════ -->
+    <section class="split-section">
+        <div class="split-container">
+            <!-- Left: Text Content -->
+            <div class="split-left">
+                <span class="split-intro-badge">About Our Institution</span>
+                <h2 class="split-title">Building a Brighter<br><span style="color: var(--accent-emerald);">Spiritual Future</span></h2>
+                <p class="split-desc">
+                    At Nuur Al Shams, we believe in the transformative power of Quranic education. For over many years, we have been a beacon of knowledge in DIRE DAWA, providing free, high-quality Islamic studies to students of all levels.
+                </p>
+            </div>
+
+            <!-- Right: Cinematic Asymmetric Grid -->
+            <div class="split-right">
+                <div class="cinema-grid-asym">
+                    <div class="cg-item item-1">
+                        <img src="female-learning-quran.jpg" alt="Student Reading">
+                    </div>
+                    <div class="cg-item item-2">
+                        <img src="photo_2026-03-15_13-24-46.jpg" alt="Students in Classroom">
+                    </div>
+                    <div class="cg-item item-3">
+                        <img src="photo_2026-03-15_13-24-34.jpg" alt="Student Focused">
+                    </div>
+                    <div class="cg-item item-4">
+                        <img src="photo_2026-03-17_15-32-59.jpg" alt="Learning Session">
+                    </div>
+                    <div class="cg-item item-5">
+                        <img src="photo_2026-03-17_15-33-38.jpg" alt="Quran Study">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form Section -->
+    <section class="registration-container" id="register" style="padding-top: 50px; background: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="section-title">Registration Form</h2>
+
+            <div class="form-card" style="box-shadow: 0 0 50px rgba(0,0,0,0.5);">
+                <form id="registrationForm" novalidate>
+                    <div class="form-grid">
+                        
+                        <!-- Personal Info Group -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">Personal Information</h3>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label for="studentFullName">Student Full Name</label>
+                                    <input type="text" id="studentFullName" placeholder="Enter student's full name" required>
+                                </div>
+                                <div class="mobile-row">
+                                    <div class="form-group">
+                                        <label for="age">Age</label>
+                                        <input type="number" id="age" placeholder="Enter age" min="1" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Sex</label>
+                                        <div class="radio-group" id="sexGroup">
+                                            <label class="radio-option"><input type="radio" name="sex" value="Male"> <span class="opt-highlight">Male</span></label>
+                                            <label class="radio-option"><input type="radio" name="sex" value="Female"> <span class="opt-highlight">Female</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="kebele">Kebele</label>
+                                    <input type="text" id="kebele" placeholder="Enter Kebele" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Student Type</label>
+                                    <div class="radio-group" id="studentTypeGroup">
+                                        <label class="radio-option"><input type="radio" name="studentType" value="Regular"> <span class="opt-highlight">Regular</span></label>
+                                        <label class="radio-option"><input type="radio" name="studentType" value="New"> <span class="opt-highlight">New</span></label>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="phone">Family/Guardian Phone Number</label>
+                                    <input type="tel" id="phone" placeholder="e.g. 0912345678" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Study & Health Info Group -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">Study & Health Information</h3>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Medical Condition</label>
+                                    <div class="radio-group" id="disabilityGroup">
+                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Dhukkuba Onnee"> <span class="opt-highlight">Dhukkuba Onnee</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Dhukkuba Khalee"> <span class="opt-highlight">Dhukkuba Khalee</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Gaggaba"> <span class="opt-highlight">Gaggaba</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition" value="None"> <span class="opt-highlight">None</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Other" id="disabilityOtherCheck"> <span class="opt-highlight">Other</span></label>
+                                    </div>
+                                    <div id="disability-other-container" style="display:none; margin-top: 15px;">
+                                        <input type="text" id="disabilityType" placeholder="Please specify your disability">
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Level of Study</label>
+                                    <div class="radio-group" id="levelGroup">
+                                        <label class="radio-option"><input type="radio" name="level" value="Quran" onchange="showLevelOptions()"> Quran</label>
+                                        <label class="radio-option"><input type="radio" name="level" value="Kitab" onchange="showLevelOptions()"> Kitab</label>
+                                        <label class="radio-option"><input type="radio" name="level" value="Aliifa" onchange="showLevelOptions()"> Aliifa</label>
+                                    </div>
+                                    <div id="quranOptions" class="level-options">
+                                        <label>Selection Range:</label>
+                                        <div class="radio-group">
+                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 1-10"> Juz 1-10</label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 10-20"> Juz 10-20</label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 20-30"> Juz 20-30</label>
+                                        </div>
+                                    </div>
+                                    <div id="kitabOptions" class="level-options">
+                                        <label>Selection Range:</label>
+                                        <div class="radio-group">
+                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Usula"> <span class="opt-highlight">Usula</span></label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Riyada"> <span class="opt-highlight">Riyada</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Uploads Group -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">Document Uploads</h3>
+                            <div class="form-grid-inner">
+                                <div class="form-group">
+                                    <label>Student Photo</label>
+                                    <div class="modern-upload-card compact" id="studentUploadCard">
+                                        <div class="upload-placeholder" id="studentUploadPlaceholder">
+                                            <h3>Upload Student Photo</h3>
+                                            <button type="button" class="btn-upload-opt" id="btnStudentGallery">📷 Upload Photo</button>
+                                            <input type="file" id="studentPhoto" accept="image/*" hidden>
+                                        </div>
+                                        <div class="upload-preview-container" id="studentPreviewContainer" style="display:none">
+                                            <div class="preview-wrapper"><img id="studentPreview" class="preview-img-active"></div>
+                                            <div class="upload-actions">
+                                                <button type="button" class="btn-action retake" id="studentRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="studentUse">Use Photo</button>
+                                                <button type="button" class="btn-action confirm" id="studentConfirm" style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview" id="studentCancel">✕</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Family/Guardian Photo</label>
+                                    <div class="modern-upload-card compact" id="familyUploadCard">
+                                        <div class="upload-placeholder" id="familyUploadPlaceholder">
+                                            <h3>Upload Family/Guardian Photo</h3>
+                                            <button type="button" class="btn-upload-opt" id="btnFamilyGallery">📷 Upload Photo</button>
+                                            <input type="file" id="familyPhoto" accept="image/*" hidden>
+                                        </div>
+                                        <div class="upload-preview-container" id="familyPreviewContainer" style="display:none">
+                                            <div class="preview-wrapper"><img id="familyPreview" class="preview-img-active"></div>
+                                            <div class="upload-actions">
+                                                <button type="button" class="btn-action retake" id="familyRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="familyUse">Use Photo</button>
+                                                <button type="button" class="btn-action confirm" id="familyConfirm" style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview" id="familyCancel">✕</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relation-dropdown-wrapper">
+                                        <label for="guardianRelation">Relation to Student</label>
+                                        <select id="guardianRelation" required>
+                                            <option value="" disabled selected>Select relation</option>
+                                            <option value="Father">Father</option>
+                                            <option value="Mother">Mother</option>
+                                            <option value="Brother">Brother</option>
+                                            <option value="Sister">Sister</option>
+                                            <option value="Uncle">Uncle</option>
+                                            <option value="Aunt">Aunt</option>
+                                            <option value="Grandmother">Grandmother</option>
+                                            <option value="Grandfather">Grandfather</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Student National ID</label>
+                                    <div class="modern-upload-card premium-id-card" id="nationalIDCard">
+                                        <div class="id-tabs">
+                                            <div class="id-tab active" id="tabFront">Front Side <span class="check-icon">✓</span></div>
+                                            <div class="id-tab" id="tabBack">Back Side <span class="check-icon">✓</span></div>
+                                        </div>
+                                        <h3 id="idStepTitle">Upload Front Side of ID</h3>
+                                        <div class="upload-placeholder" id="idPlaceholder">
+                                            <button type="button" class="btn-upload-opt" id="btnIDGallery">📷 Upload Photo</button>
+                                            <input type="file" id="idFileInput" accept="image/*" hidden>
+                                        </div>
+                                        <div class="upload-preview-container" id="idPreviewContainer" style="display:none">
+                                            <div class="preview-wrapper"><img id="idPreview" class="preview-img-active"></div>
+                                            <div class="upload-actions">
+                                                <button type="button" class="btn-action retake" id="btnIDRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="btnIDUse">Use Photo</button>
+                                                <button type="button" class="btn-action confirm" id="btnIDConfirm" style="display:none">Confirm</button>
+                                            </div>
+                                        </div>
+                                        <div class="final-id-preview" id="finalIDPreview" style="display:none; padding: 15px;">
+                                            <div class="final-images">
+                                                <div class="final-item"><p>Front Side</p><div class="mini-preview"><img id="imgFinalFront"></div></div>
+                                                <div class="final-item"><p>Back Side</p><div class="mini-preview"><img id="imgFinalBack"></div></div>
+                                            </div>
+                                            <div class="status-complete">✔ National ID Completed</div>
+                                            <button type="button" class="btn-secondary" id="btnIDFullRetake" style="margin-top: 15px; width: 100%;">Retake Both</button>
+                                        </div>
+                                        <button type="button" class="btn-close-preview" id="btnIDReset">✕</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment System Group -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">Payment Information</h3>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <div class="payment-summary">
+                                        <p>Registration Fee</p>
+                                        <div class="amount-text" id="paymentAmount">ETB 0</div>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Payment Method</label>
+                                    <div class="radio-group payment-radio-group">
+                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="EBirr" onchange="showPaymentInfo()"> <img src="EBirr.webp" alt="EBirr Logo" class="payment-radio-logo"> <span>EBirr</span></label>
+                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="CBE" onchange="showPaymentInfo()"> <img src="CBE.png" alt="CBE Logo" class="payment-radio-logo"> <span>CBE</span></label>
+                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="Bank of Oromia" onchange="showPaymentInfo()"> <img src="Oromia%20Bank.png" alt="Bank of Oromia Logo" class="payment-radio-logo"> <span>Bank of Oromia</span></label>
+                                    </div>
+                                    <div id="paymentInfo" class="payment-cards-container" style="display:none">
+                                        <div class="payment-bank-card ebirr" id="cardEBirr" style="display:none"><div class="bank-card-label">Send payment to <strong>EBirr</strong></div><div class="bank-card-number">09-91-28-95-26</div></div>
+                                        <div class="payment-bank-card cbe" id="cardCBE" style="display:none"><div class="bank-card-label">Send payment to <strong>CBE</strong></div><div class="bank-card-number">1000-64-64-14-621</div></div>
+                                        <div class="payment-bank-card oromia" id="cardOromia" style="display:none"><div class="bank-card-label">Send payment to <strong>Bank of Oromia</strong></div><div class="bank-card-number">00-23-56-79-427</div></div>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width" id="receiptUploadSection" style="display:none">
+                                    <label>Upload Payment Receipt</label>
+                                    <div class="modern-upload-card compact" id="receiptUploadCard">
+                                        <div class="upload-placeholder" id="receiptUploadPlaceholder"><h3>Upload Payment Receipt</h3><button type="button" class="btn-upload-opt" id="btnReceiptGallery">🧾 Upload Receipt</button><input type="file" id="receiptPhoto" accept="image/*" hidden></div>
+                                        <div class="upload-preview-container" id="receiptPreviewContainer" style="display:none">
+                                            <div class="preview-wrapper"><img id="receiptPreview" class="preview-img-active"></div>
+                                            <div class="upload-actions">
+                                                <button type="button" class="btn-action retake" id="receiptRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="receiptUse">Use Photo</button>
+                                                <button type="button" class="btn-action confirm" id="receiptConfirm" style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview" id="receiptCancel">✕</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 20px;">Submit Registration</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-modal" id="successModal" style="display:none">
+        <div class="success-icon">✔</div>
+        <h2>Registration Completed Successfully</h2>
+        <p>Your student records have been saved to the Nuur Al Shams.</p>
+        <div class="success-actions"><button onclick="goToHome()" class="btn-success-main" style="width: auto; padding: 15px 60px;">Return to Home</button></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Markaz Nuur Al Shams</div>
+            <p class="footer-quote">"Empowering students through Quran and knowledge."</p>
+            <p style="margin-top: 20px; color: var(--text-gray); font-size: 0.8rem;">&copy; 2026 Nuur Al Shams. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="main.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function goToHome() { window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>

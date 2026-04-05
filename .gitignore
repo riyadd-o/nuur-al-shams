@@ -1,0 +1,14 @@
+# Windows/Mac system files
+Thumbs.db
+.DS_Store
+
+# Development secrets (KEEP THESE!)
+.env
+.env.local
+.env.*
+
+# Large folders
+node_modules/
+
+# Logs
+*.log
