@@ -385,8 +385,8 @@
                                 <div class="form-group full-width">
                                     <label>Student ID</label>
                                     <div class="modern-upload-card premium-id-card" id="nationalIDCard">
-                                        <h3 id="idStepTitle">Upload student National ID</h3>
                                         <div class="upload-placeholder" id="idPlaceholder">
+                                            <h3 id="idStepTitle">Upload student National ID</h3>
                                             <button type="button" class="btn-upload-opt" id="btnIDGallery">📷 Upload Photo</button>
                                             <input type="file" id="idFileInput" accept="image/*" hidden>
                                         </div>
@@ -443,6 +443,7 @@
                                 <div class="form-group full-width">
                                     <label>Payment Method</label>
                                     <div class="radio-group payment-radio-group">
+                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="Cash" onchange="showPaymentInfo()"> <span style="font-size:1.3rem; line-height:1;">💵</span> <span>Cash</span></label>
                                         <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="EBirr" onchange="showPaymentInfo()"> <img src="EBirr.webp" alt="EBirr Logo" class="payment-radio-logo"> <span>EBirr</span></label>
                                         <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="CBE" onchange="showPaymentInfo()"> <img src="CBE.png" alt="CBE Logo" class="payment-radio-logo"> <span>CBE</span></label>
                                         <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="Bank of Oromia" onchange="showPaymentInfo()"> <img src="Oromia%20Bank.png" alt="Bank of Oromia Logo" class="payment-radio-logo"> <span>Bank of Oromia</span></label>

@@ -282,7 +282,6 @@ class NationalIDUploadManager {
     showPlaceholder() {
         if (this.previewContainer) this.previewContainer.style.display = 'none';
         if (this.placeholder) this.placeholder.style.display = 'flex';
-        if (this.stepTitle) this.stepTitle.style.display = 'block';
     }
 
     showConfirmedState() {
@@ -345,7 +344,14 @@ window.showPaymentInfo = function() {
     const method = methodElement.value;
     const infoContainer = document.getElementById('paymentInfo');
     const receiptSection = document.getElementById('receiptUploadSection');
-    
+
+    if (method === 'Cash') {
+        // Cash: hide bank info cards and receipt upload
+        if (infoContainer) infoContainer.style.display = 'none';
+        if (receiptSection) receiptSection.style.display = 'none';
+        return;
+    }
+
     if (infoContainer) infoContainer.style.display = 'block';
     if (receiptSection) receiptSection.style.display = 'block';
     
@@ -526,7 +532,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const pay = getCheck('paymentMethod');
             const payGroup = document.querySelector('.payment-radio-group');
             if (!pay) firstErr = firstErr || showError(payGroup, "Required");
-            if (pay && !receiptPhotoManager.isConfirmed) firstErr = firstErr || showError(receiptPhotoManager.card, "Required");
+            const isCash = pay?.value === 'Cash';
+            if (pay && !isCash && !receiptPhotoManager.isConfirmed) firstErr = firstErr || showError(receiptPhotoManager.card, "Required");
 
             if (firstErr) { 
                 console.warn("Validation failed at:", firstErr.id || firstErr.name);
@@ -547,9 +554,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fUrl = await familyPhotoManager.upload();
                 const idUrls = await nationalIDManager.upload();
                 const gIdUrl = await guardianIDManager.upload();
-                const rUrl = await receiptPhotoManager.upload();
+                const rUrl = isCash ? null : await receiptPhotoManager.upload();
 
-                if (!sUrl || !fUrl || !idUrls?.front || !gIdUrl || !rUrl) {
+                if (!sUrl || !fUrl || !idUrls?.front || !gIdUrl || (!isCash && !rUrl)) {
                     throw new Error("One or more uploads failed. Please check your internet and try again.");
                 }
 
@@ -571,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     family_photo_url: fUrl,
                     id_front_url: idUrls.front,
                     guardian_id_url: gIdUrl,
-                    receipt_url: rUrl
+                    receipt_url: rUrl || null
                 };
 
                 console.log("Final data being sent to Supabase:", formData);
@@ -597,7 +604,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 guardianIDManager.reset();
                 receiptPhotoManager.reset(); 
                 nationalIDManager.reset();
-                window.showLevelOptions(); // Reset fee display
+                window.showLevelOptions();
+                // Also hide payment info/receipt in case Cash was chosen
+                const infoContainer = document.getElementById('paymentInfo');
+                const receiptSection = document.getElementById('receiptUploadSection');
+                if (infoContainer) infoContainer.style.display = 'none';
+                if (receiptSection) receiptSection.style.display = 'none';
 
             } catch (err) {
                 console.error("Critical Registration Error:", err);
