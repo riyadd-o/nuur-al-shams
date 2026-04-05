@@ -94,7 +94,6 @@ async function uploadImageToSupabase(dataUrl, type) {
 let studentPhotoFile = null;
 let familyPhotoFile = null;
 let idFrontFile = null;
-let idBackFile = null;
 let receiptFile = null;
 
 // Photo Upload Manager Class
@@ -214,11 +213,8 @@ class PhotoUploadManager {
 
 class NationalIDUploadManager {
     constructor() {
-        this.step = 1;
         this.frontImage = null;
-        this.backImage = null;
         this.frontUrl = null;
-        this.backUrl = null;
         this.isFullyConfirmed = false;
 
         this.card = document.getElementById('nationalIDCard');
@@ -227,8 +223,6 @@ class NationalIDUploadManager {
         this.previewContainer = document.getElementById('idPreviewContainer');
         this.previewImg = document.getElementById('idPreview');
         this.stepTitle = document.getElementById('idStepTitle');
-        this.tabFront = document.getElementById('tabFront');
-        this.tabBack = document.getElementById('tabBack');
         this.btnGallery = document.getElementById('btnIDGallery');
         this.btnRetake = document.getElementById('btnIDRetake');
         this.btnUse = document.getElementById('btnIDUse');
@@ -236,7 +230,6 @@ class NationalIDUploadManager {
         this.btnReset = document.getElementById('btnIDReset');
         this.finalPreview = document.getElementById('finalIDPreview');
         this.finalFront = document.getElementById('imgFinalFront');
-        this.finalBack = document.getElementById('imgFinalBack');
         this.btnFullRetake = document.getElementById('btnIDFullRetake');
 
         this.init();
@@ -270,39 +263,19 @@ class NationalIDUploadManager {
             if (this.btnConfirm) this.btnConfirm.style.display = 'inline-block';
         });
         this.btnConfirm?.addEventListener('click', () => {
-            if (this.step === 1) {
-                this.frontImage = this.previewImg?.src;
-                this.tabFront?.classList.add('completed');
-                this.tabFront?.classList.remove('active');
-                this.step = 2;
-                this.stepTransition();
-            } else {
-                this.backImage = this.previewImg?.src;
-                this.tabBack?.classList.add('completed');
-                this.tabBack?.classList.remove('active');
-                this.isFullyConfirmed = true;
-                this.showFinalState();
-            }
+            this.frontImage = this.previewImg?.src;
+            this.isFullyConfirmed = true;
+            this.showFinalState();
         });
         this.btnReset?.addEventListener('click', () => this.reset());
         this.btnFullRetake?.addEventListener('click', () => this.reset());
-        this.stepTransition();
+        this.showPlaceholder();
     }
 
-    stepTransition() {
+    showPlaceholder() {
         if (this.previewContainer) this.previewContainer.style.display = 'none';
         if (this.placeholder) this.placeholder.style.display = 'flex';
-        if (this.stepTitle) {
-            this.stepTitle.style.display = 'block';
-            if (this.step === 1) {
-                this.stepTitle.innerText = "Upload Front Side of ID";
-                this.tabFront?.classList.add('active');
-                this.tabBack?.classList.remove('active');
-            } else {
-                this.stepTitle.innerText = "Upload Back Side of ID";
-                this.tabBack?.classList.add('active');
-            }
-        }
+        if (this.stepTitle) this.stepTitle.style.display = 'block';
     }
 
     showFinalState() {
@@ -310,27 +283,24 @@ class NationalIDUploadManager {
         if (this.previewContainer) this.previewContainer.style.display = 'none';
         if (this.finalPreview) this.finalPreview.style.display = 'block';
         if (this.finalFront) this.finalFront.src = this.frontImage;
-        if (this.finalBack) this.finalBack.src = this.backImage;
         if (this.card) this.card.classList.add('has-upload');
         if (this.stepTitle) this.stepTitle.style.display = 'none';
     }
 
     async upload() {
-        if (!this.frontImage || !this.backImage || !this.isFullyConfirmed) return null;
+        if (!this.frontImage || !this.isFullyConfirmed) return null;
         this.frontUrl = await uploadImageToSupabase(this.frontImage, 'id-front');
-        this.backUrl = await uploadImageToSupabase(this.backImage, 'id-back');
-        return { front: this.frontUrl, back: this.backUrl };
+        return { front: this.frontUrl };
     }
 
     reset() {
-        this.step = 1; this.frontImage = null; this.backImage = null;
-        this.frontUrl = null; this.backUrl = null;
-        idFrontFile = null; idBackFile = null; this.isFullyConfirmed = false;
+        this.frontImage = null;
+        this.frontUrl = null;
+        idFrontFile = null;
+        this.isFullyConfirmed = false;
         if (this.finalPreview) this.finalPreview.style.display = 'none';
-        this.tabFront?.classList.remove('active', 'completed');
-        this.tabBack?.classList.remove('active', 'completed');
         if (this.card) this.card.classList.remove('has-upload');
-        this.stepTransition();
+        this.showPlaceholder();
     }
 }
 
@@ -564,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const idUrls = await nationalIDManager.upload();
                 const rUrl = await receiptPhotoManager.upload();
 
-                if (!sUrl || !fUrl || !idUrls || !rUrl) {
+                if (!sUrl || !fUrl || !idUrls?.front || !rUrl) {
                     throw new Error("One or more uploads failed. Please check your internet and try again.");
                 }
 
@@ -585,7 +555,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     student_photo_url: sUrl,
                     family_photo_url: fUrl,
                     id_front_url: idUrls.front,
-                    id_back_url: idUrls.back,
                     receipt_url: rUrl
                 };
 
