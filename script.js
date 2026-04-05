@@ -56,6 +56,7 @@ async function uploadImageToSupabase(dataUrl, type) {
         'family': 'family_photos',
         'id-front': 'id_cards',
         'id-back': 'id_cards',
+        'guardian-id': 'guardian_id_cards',
         'receipt': 'payment_receipts'
     };
     const folder = folderMap[type] || 'misc';
@@ -305,7 +306,7 @@ class NationalIDUploadManager {
 }
 
 // Global instances
-let studentPhotoManager, familyPhotoManager, receiptPhotoManager, nationalIDManager;
+let studentPhotoManager, familyPhotoManager, receiptPhotoManager, nationalIDManager, guardianIDManager;
 
 // Event Functions - Exposed to window for HTML onchange
 window.showLevelOptions = function() {
@@ -404,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
     familyPhotoManager = new PhotoUploadManager('family', 'family');
     receiptPhotoManager = new PhotoUploadManager('receipt', 'receipt');
     nationalIDManager = new NationalIDUploadManager();
+    guardianIDManager = new PhotoUploadManager('guardianID', 'guardian-id');
 
     // Disability Logic (Radio based)
     const disabilityRadios = document.querySelectorAll('input[name="medical_condition"]');
@@ -508,6 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 firstErr = firstErr || showError(relationField, "Required");
             }
             if (!nationalIDManager.isFullyConfirmed) firstErr = firstErr || showError(nationalIDManager.card, "Required");
+            if (!guardianIDManager.isConfirmed) firstErr = firstErr || showError(guardianIDManager.card, "Required");
             
             const pay = getCheck('paymentMethod');
             const payGroup = document.querySelector('.payment-radio-group');
@@ -532,9 +535,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sUrl = await studentPhotoManager.upload();
                 const fUrl = await familyPhotoManager.upload();
                 const idUrls = await nationalIDManager.upload();
+                const gIdUrl = await guardianIDManager.upload();
                 const rUrl = await receiptPhotoManager.upload();
 
-                if (!sUrl || !fUrl || !idUrls?.front || !rUrl) {
+                if (!sUrl || !fUrl || !idUrls?.front || !gIdUrl || !rUrl) {
                     throw new Error("One or more uploads failed. Please check your internet and try again.");
                 }
 
@@ -555,6 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     student_photo_url: sUrl,
                     family_photo_url: fUrl,
                     id_front_url: idUrls.front,
+                    guardian_id_url: gIdUrl,
                     receipt_url: rUrl
                 };
 
@@ -578,6 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.reset();
                 studentPhotoManager.reset(); 
                 familyPhotoManager.reset(); 
+                guardianIDManager.reset();
                 receiptPhotoManager.reset(); 
                 nationalIDManager.reset();
                 window.showLevelOptions(); // Reset fee display

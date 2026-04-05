@@ -411,6 +411,32 @@
                             </div>
                         </div>
 
+                        <!-- Guardian ID Upload -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">Family / Guardian ID</h3>
+                            <div class="form-grid-inner">
+                                <div class="form-group full-width">
+                                    <label>Upload Family / Guardian ID</label>
+                                    <div class="modern-upload-card compact" id="guardianIDUploadCard">
+                                        <div class="upload-placeholder" id="guardianIDUploadPlaceholder">
+                                            <h3>Upload Guardian ID</h3>
+                                            <button type="button" class="btn-upload-opt" id="btnGuardianIDGallery">📷 Upload Photo</button>
+                                            <input type="file" id="guardianIDPhoto" accept="image/*" hidden>
+                                        </div>
+                                        <div class="upload-preview-container" id="guardianIDPreviewContainer" style="display:none">
+                                            <div class="preview-wrapper"><img id="guardianIDPreview" class="preview-img-active"></div>
+                                            <div class="upload-actions">
+                                                <button type="button" class="btn-action retake" id="guardianIDRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="guardianIDUse">Use Photo</button>
+                                                <button type="button" class="btn-action confirm" id="guardianIDConfirm" style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview" id="guardianIDCancel">✕</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Payment System Group -->
                         <div class="form-section">
                             <h3 class="section-title-small">Payment Information</h3>
