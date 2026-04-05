@@ -229,9 +229,6 @@ class NationalIDUploadManager {
         this.btnUse = document.getElementById('btnIDUse');
         this.btnConfirm = document.getElementById('btnIDConfirm');
         this.btnReset = document.getElementById('btnIDReset');
-        this.finalPreview = document.getElementById('finalIDPreview');
-        this.finalFront = document.getElementById('imgFinalFront');
-        this.btnFullRetake = document.getElementById('btnIDFullRetake');
 
         this.init();
     }
@@ -244,14 +241,21 @@ class NationalIDUploadManager {
             if (file) {
                 try {
                     const compressedDataUrl = await compressImage(file);
+                    // Reset confirmed state when a new file is chosen
+                    this.isFullyConfirmed = false;
+                    this.previewContainer?.querySelector('.photo-confirmed-msg')?.remove();
+
                     if (this.placeholder) this.placeholder.style.display = 'none';
                     if (this.previewImg) this.previewImg.src = compressedDataUrl;
                     if (this.previewContainer) this.previewContainer.style.display = 'block';
+                    if (this.btnRetake) this.btnRetake.style.display = 'inline-block';
                     if (this.btnUse) this.btnUse.style.display = 'inline-block';
                     if (this.btnConfirm) this.btnConfirm.style.display = 'none';
                     if (this.card) {
                         this.card.classList.remove('invalid-field');
                         this.card.classList.add('has-upload');
+                        const err = this.card.parentNode.querySelector('.error-message');
+                        if (err) err.style.display = 'none';
                     }
                 } catch (err) {
                     console.error("ID processing error:", err);
@@ -266,10 +270,12 @@ class NationalIDUploadManager {
         this.btnConfirm?.addEventListener('click', () => {
             this.frontImage = this.previewImg?.src;
             this.isFullyConfirmed = true;
-            this.showFinalState();
+            if (this.btnConfirm) this.btnConfirm.style.display = 'none';
+            if (this.btnUse) this.btnUse.style.display = 'none';
+            if (this.stepTitle) this.stepTitle.style.display = 'none';
+            this.showConfirmedState();
         });
         this.btnReset?.addEventListener('click', () => this.reset());
-        this.btnFullRetake?.addEventListener('click', () => this.reset());
         this.showPlaceholder();
     }
 
@@ -279,13 +285,14 @@ class NationalIDUploadManager {
         if (this.stepTitle) this.stepTitle.style.display = 'block';
     }
 
-    showFinalState() {
-        if (this.placeholder) this.placeholder.style.display = 'none';
-        if (this.previewContainer) this.previewContainer.style.display = 'none';
-        if (this.finalPreview) this.finalPreview.style.display = 'block';
-        if (this.finalFront) this.finalFront.src = this.frontImage;
+    showConfirmedState() {
+        if (!this.previewContainer) return;
+        this.previewContainer.querySelector('.photo-confirmed-msg')?.remove();
+        const msg = document.createElement('div');
+        msg.className = 'photo-confirmed-msg';
+        msg.innerHTML = `<span>✔</span> Photo Confirmed`;
+        this.previewContainer.appendChild(msg);
         if (this.card) this.card.classList.add('has-upload');
-        if (this.stepTitle) this.stepTitle.style.display = 'none';
     }
 
     async upload() {
@@ -299,8 +306,12 @@ class NationalIDUploadManager {
         this.frontUrl = null;
         idFrontFile = null;
         this.isFullyConfirmed = false;
-        if (this.finalPreview) this.finalPreview.style.display = 'none';
+        this.previewContainer?.querySelector('.photo-confirmed-msg')?.remove();
+        if (this.previewContainer) this.previewContainer.style.display = 'none';
+        if (this.btnUse) this.btnUse.style.display = 'inline-block';
+        if (this.btnConfirm) this.btnConfirm.style.display = 'none';
         if (this.card) this.card.classList.remove('has-upload');
+        this.input.value = '';
         this.showPlaceholder();
     }
 }

@@ -391,19 +391,12 @@
                                             <input type="file" id="idFileInput" accept="image/*" hidden>
                                         </div>
                                         <div class="upload-preview-container" id="idPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper"><img id="idPreview" class="preview-img-active"></div>
+                                            <div class="preview-wrapper" style="display:flex;justify-content:center;align-items:center;"><img id="idPreview" class="preview-img-active"></div>
                                             <div class="upload-actions">
                                                 <button type="button" class="btn-action retake" id="btnIDRetake">Retake</button>
                                                 <button type="button" class="btn-action use" id="btnIDUse">Use Photo</button>
                                                 <button type="button" class="btn-action confirm" id="btnIDConfirm" style="display:none">Confirm</button>
                                             </div>
-                                        </div>
-                                        <div class="final-id-preview" id="finalIDPreview" style="display:none; padding: 15px;">
-                                            <div class="final-images">
-                                                <div class="final-item"><p>Front Side</p><div class="mini-preview"><img id="imgFinalFront"></div></div>
-                                            </div>
-                                            <div class="status-complete">✔ National ID Completed</div>
-                                            <button type="button" class="btn-secondary" id="btnIDFullRetake" style="margin-top: 15px; width: 100%;">Retake Photo</button>
                                         </div>
                                         <button type="button" class="btn-close-preview" id="btnIDReset">✕</button>
                                     </div>
@@ -417,7 +410,7 @@
                             <div class="form-grid-inner">
                                 <div class="form-group full-width">
                                     <label>Upload Family / Guardian ID</label>
-                                    <div class="modern-upload-card compact" id="guardianIDUploadCard">
+                                    <div class="modern-upload-card premium-id-card" id="guardianIDUploadCard">
                                         <div class="upload-placeholder" id="guardianIDUploadPlaceholder">
                                             <h3>Upload Guardian ID</h3>
                                             <button type="button" class="btn-upload-opt" id="btnGuardianIDGallery">📷 Upload Photo</button>
