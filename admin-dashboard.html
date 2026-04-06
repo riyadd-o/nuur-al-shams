@@ -91,19 +91,156 @@
             font-size: 0.9rem;
         }
         .btn-pending {
-            background: rgba(241, 196, 15, 0.1);
-            color: #f1c40f;
-            border: 1px solid rgba(241, 196, 15, 0.3);
-            padding: 6px 14px;
+            background: rgba(0, 195, 255, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #00e5ff;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(0, 229, 255, 0.1);
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: pulse-glow 2s infinite alternate;
         }
+
+        .btn-pending::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+            transform: skewX(-20deg);
+            animation: shimmer 2.5s infinite;
+        }
+
         .btn-pending:hover {
-            background: rgba(241, 196, 15, 0.2);
-            transform: translateY(-1px);
+            background: rgba(0, 195, 255, 0.15);
+            color: #fff;
+            border-color: rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(0, 229, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                border-color: rgba(0, 229, 255, 0.15);
+            }
+            100% {
+                box-shadow: 0 0 12px rgba(0, 229, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                border-color: rgba(0, 229, 255, 0.4);
+            }
+        }
+        /* Editable Details */
+        #tab-info input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            color: var(--text-white);
+            font-size: 1.05rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #tab-info input:focus {
+            border-color: var(--accent-gold);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .btn-confirm-edit {
+            display: none;
+            width: 100%;
+            padding: 16px;
+            margin-top: 25px;
+            background: rgba(0, 229, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #00e5ff;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(0, 229, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: pulse-glow-cyan 2s infinite alternate;
+        }
+
+        .btn-confirm-edit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+            transform: skewX(-25deg);
+            animation: shimmer 3s infinite;
+        }
+
+        .btn-confirm-edit:hover {
+            background: rgba(0, 229, 255, 0.2);
+            color: #fff;
+            border-color: rgba(0, 229, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        @keyframes pulse-glow-cyan {
+            0% { box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); border-color: rgba(0, 229, 255, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(0, 229, 255, 0.5); border-color: rgba(0, 229, 255, 0.7); }
+        }
+
+        /* Inline Mobile Update Buttons */
+        .input-with-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .inline-confirm-btn {
+            display: none;
+            position: absolute;
+            right: 5px;
+            padding: 8px 12px;
+            background: rgba(0, 229, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #00e5ff;
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 5;
+            text-transform: uppercase;
+            animation: pulse-glow-cyan 2s infinite alternate;
+        }
+        
+        @media (max-width: 768px) {
+            .detail-modal-content {
+                height: 85vh !important;
+                margin-top: 40px !important;
+                border-radius: 20px 20px 0 0 !important;
+            }
+            .detail-modal-header {
+                padding-top: 15px !important;
+            }
+            #tab-info input {
+                padding-right: 90px !important; /* Make room for the inline button */
+            }
         }
     </style>
 </head>
@@ -209,42 +346,69 @@
                 <!-- Info Tab -->
                 <div id="tab-info" class="detail-tab-pane active">
                     <div class="detail-grid">
+                        <input type="hidden" id="det-id">
                         <div class="detail-item">
                             <label>Full Name</label>
-                            <p id="det-name">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-name-input" oninput="handleFieldChange('name')">
+                                <button id="btn-confirm-name" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item">
                             <label>Type</label>
-                            <p id="det-type">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-type-input" oninput="handleFieldChange('type')">
+                                <button id="btn-confirm-type" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item">
                             <label>Phone</label>
-                            <p id="det-phone">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-phone-input" oninput="handleFieldChange('phone')">
+                                <button id="btn-confirm-phone" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item full-width">
                             <label>Level</label>
-                            <p id="det-level">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-level-input" oninput="handleFieldChange('level')">
+                                <button id="btn-confirm-level" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item">
                             <label>Age</label>
-                            <p id="det-age">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-age-input" oninput="handleFieldChange('age')">
+                                <button id="btn-confirm-age" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item">
                             <label>Sex</label>
-                            <p id="det-sex">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-sex-input" oninput="handleFieldChange('sex')">
+                                <button id="btn-confirm-sex" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item">
                             <label>Kebele</label>
-                            <p id="det-kebele">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-kebele-input" oninput="handleFieldChange('kebele')">
+                                <button id="btn-confirm-kebele" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
-
                         <div class="detail-item">
                             <label>Family Relation</label>
-                            <p id="det-relation">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-relation-input" oninput="handleFieldChange('relation')">
+                                <button id="btn-confirm-relation" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                         <div class="detail-item full-width">
                             <label>Medical Condition</label>
-                            <p id="det-medical">-</p>
+                            <div class="input-with-button">
+                                <input type="text" id="det-medical-input" oninput="handleFieldChange('medical')">
+                                <button id="btn-confirm-medical" class="inline-confirm-btn" onclick="updateStudentFromModal()">Confirm</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -285,7 +449,7 @@
                             <p id="det-payment-bank">-</p>
                         </div>
                     </div>
-                    <div class="doc-box full-width mt-15">
+                    <div class="doc-box full-width mt-15" id="det-receipt-container">
                         <label>Receipt Image</label>
                         <img id="det-receipt" src="" alt="Payment Receipt">
                     </div>
@@ -718,23 +882,117 @@
 
 
             // 4. Detail Modal Logic
+            let originalModalData = {};
+
+            window.handleFieldChange = function(field) {
+                const btn = document.getElementById(`btn-confirm-${field}`);
+                const currentVal = document.getElementById(`det-${field}-input`).value;
+                
+                if (currentVal !== originalModalData[field]) {
+                    // Hide all other confirm buttons first so only one is visible at a time
+                    document.querySelectorAll('.inline-confirm-btn').forEach(b => b.style.display = 'none');
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            };
+
+            window.updateStudentFromModal = async function() {
+                const studentId = document.getElementById('det-id').value;
+                // Find which button was clicked
+                const activeBtn = document.querySelector('.inline-confirm-btn[style*="display: block"]');
+                
+                const updatedData = {
+                    full_name: document.getElementById('det-name-input').value,
+                    student_type: document.getElementById('det-type-input').value,
+                    phone: document.getElementById('det-phone-input').value,
+                    level_of_study: document.getElementById('det-level-input').value,
+                    age: document.getElementById('det-age-input').value,
+                    sex: document.getElementById('det-sex-input').value,
+                    kebele: document.getElementById('det-kebele-input').value,
+                    relation_to_student: document.getElementById('det-relation-input').value,
+                    medical_condition: document.getElementById('det-medical-input').value
+                };
+
+                const originalBtnText = activeBtn ? activeBtn.innerText : "Confirm";
+                if (activeBtn) {
+                    activeBtn.innerText = "...";
+                    activeBtn.disabled = true;
+                }
+
+                try {
+                    const { error } = await supabase
+                        .from('students')
+                        .update(updatedData)
+                        .eq('id', studentId);
+
+                    if (error) throw error;
+
+                    if (activeBtn) activeBtn.style.display = 'none';
+                    closeStudentDetail(); // Automatically back to dashboard
+                    
+                    // Update local students array to reflect changes in table
+                    const studentIdx = students.findIndex(s => s.id === studentId);
+                    if (studentIdx !== -1) {
+                        students[studentIdx] = { ...students[studentIdx], ...updatedData };
+                        renderTable(students);
+                        updateStats();
+                    }
+
+                    // Reset original data anchor with correct keys
+                    originalModalData.name = updatedData.full_name;
+                    originalModalData.type = updatedData.student_type;
+                    originalModalData.phone = updatedData.phone;
+                    originalModalData.level = updatedData.level_of_study;
+                    originalModalData.age = updatedData.age;
+                    originalModalData.sex = updatedData.sex;
+                    originalModalData.kebele = updatedData.kebele;
+                    originalModalData.relation = updatedData.relation_to_student;
+                    originalModalData.medical = updatedData.medical_condition;
+
+                } catch (err) {
+                    console.error("Update failed:", err.message);
+                    alert("failed to update: " + err.message);
+                } finally {
+                    if (activeBtn) {
+                        activeBtn.innerText = "Confirm";
+                        activeBtn.disabled = false;
+                    }
+                }
+            };
+
             window.openStudentDetail = function(id) {
                 const student = students.find(s => s.id === id);
                 if (!student) return;
                 
-                // Populate Info
-                document.getElementById('det-name').innerText = student.full_name || 'N/A';
-                document.getElementById('det-type').innerText = student.student_type || 'N/A';
-                document.getElementById('det-phone').innerText = student.phone || 'N/A';
+                document.getElementById('det-id').value = id;
                 
-                const levelEl = document.getElementById('det-level');
-                if (levelEl) levelEl.innerText = student.level_of_study || 'N/A';
-                
-                document.getElementById('det-age').innerText = student.age || 'N/A';
-                document.getElementById('det-sex').innerText = student.sex || 'N/A';
-                document.getElementById('det-kebele').innerText = student.kebele || 'N/A';
-                document.getElementById('det-relation').innerText = student.relation_to_student || 'N/A';
-                document.getElementById('det-medical').innerText = student.medical_condition || 'None';
+                // Store original values
+                originalModalData = {
+                    name: student.full_name || '',
+                    type: student.student_type || '',
+                    phone: student.phone || '',
+                    level: student.level_of_study || '',
+                    age: student.age || '',
+                    sex: student.sex || '',
+                    kebele: student.kebele || '',
+                    relation: student.relation_to_student || '',
+                    medical: student.medical_condition || ''
+                };
+
+                // Populate Inputs
+                document.getElementById('det-name-input').value = originalModalData.name;
+                document.getElementById('det-type-input').value = originalModalData.type;
+                document.getElementById('det-phone-input').value = originalModalData.phone;
+                document.getElementById('det-level-input').value = originalModalData.level;
+                document.getElementById('det-age-input').value = originalModalData.age;
+                document.getElementById('det-sex-input').value = originalModalData.sex;
+                document.getElementById('det-kebele-input').value = originalModalData.kebele;
+                document.getElementById('det-relation-input').value = originalModalData.relation;
+                document.getElementById('det-medical-input').value = originalModalData.medical;
+
+                // Hide all confirm buttons initially
+                document.querySelectorAll('.inline-confirm-btn').forEach(btn => btn.style.display = 'none');
 
                 // Populate Images
                 const setImg = (id, url) => {
@@ -751,6 +1009,11 @@
                 setImg('det-id-front', student.id_front_url);
                 setImg('det-guardian-id', student.guardian_id_url);
                 setImg('det-receipt', student.receipt_url);
+                
+                const receiptContainer = document.getElementById('det-receipt-container');
+                if (receiptContainer) {
+                    receiptContainer.style.display = student.receipt_url ? 'block' : 'none';
+                }
 
                 // Populate Payment
                 let amount = 0;
@@ -770,10 +1033,10 @@
                     }
                 } else {
                     amtEl.innerText = 'Pending';
-                    amtEl.style.color = '#f1c40f'; /* Yellow pending */
+                    amtEl.style.color = '#00e5ff'; /* Cyan pending */
                     if (statusEl) {
                         statusEl.innerHTML = `Pending`;
-                        statusEl.style.color = '#f1c40f';
+                        statusEl.style.color = '#00e5ff';
                     }
                 }
                 document.getElementById('det-payment-bank').innerText = student.payment_method || 'EBirr';
@@ -819,6 +1082,15 @@
                     }, 300);
                 });
             }
+
+            // Fix for modal inputs being hidden by keyboard
+            document.querySelectorAll('#tab-info input').forEach(input => {
+                input.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            });
 
         })();
     </script>

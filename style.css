@@ -3306,7 +3306,7 @@ a[x-apple-data-detectors] {
 }
 
 .detail-link {
-    color: var(--accent-gold);
+    color: #00e5ff;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -3315,7 +3315,8 @@ a[x-apple-data-detectors] {
 }
 .detail-link:hover {
     color: #fff;
-    border-bottom: 1px solid var(--accent-gold);
+    border-bottom: 1px solid #00e5ff;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
 }
 
 /* Mobile Responsiveness for Modal */
