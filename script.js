@@ -272,7 +272,7 @@ class NationalIDUploadManager {
             this.isFullyConfirmed = true;
             if (this.btnConfirm) this.btnConfirm.style.display = 'none';
             if (this.btnUse) this.btnUse.style.display = 'none';
-            if (this.stepTitle) this.stepTitle.style.display = 'none';
+            // Removed redundant hiding of stepTitle since its parent placeholder is hidden
             this.showConfirmedState();
         });
         this.btnReset?.addEventListener('click', () => this.reset());
@@ -282,6 +282,7 @@ class NationalIDUploadManager {
     showPlaceholder() {
         if (this.previewContainer) this.previewContainer.style.display = 'none';
         if (this.placeholder) this.placeholder.style.display = 'flex';
+        if (this.stepTitle) this.stepTitle.style.display = ''; // Ensure text is visible like other components
     }
 
     showConfirmedState() {

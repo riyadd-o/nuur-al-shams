@@ -1855,10 +1855,10 @@ footer {
 }
 
 /* Hide X button on ID card until preview is active */
-#nationalIDCard > .btn-close-preview {
+.premium-id-card > .btn-close-preview {
     display: none;
 }
-#nationalIDCard.has-upload > .btn-close-preview {
+.premium-id-card.has-upload > .btn-close-preview {
     display: flex;
 }
 
@@ -2403,6 +2403,7 @@ footer {
     background: var(--bg-secondary);
     border-radius: 15px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 20px;
 }
 
@@ -2694,14 +2695,24 @@ td {
     animation: fadeIn 0.4s ease-out forwards;
 }
 
-#nationalIDCard {
+.premium-id-card {
     position: relative;
     min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 30px 20px;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
 }
 
 /* Option Selected Highlights */
@@ -3189,6 +3200,8 @@ a[x-apple-data-detectors] {
     padding: 24px;
     overflow-y: auto;
     flex: 1;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 .detail-tab-pane {
@@ -3327,18 +3340,16 @@ a[x-apple-data-detectors] {
     }
     
     .detail-modal-header {
-        position: sticky;
-        top: 0;
         background: var(--bg-secondary);
         z-index: 10;
         border-radius: 20px 20px 0 0;
+        flex-shrink: 0;
     }
     
     .detail-tabs {
-        position: sticky;
-        top: 73px; /* Right below header */
         background: var(--bg-secondary);
         z-index: 9;
+        flex-shrink: 0;
     }
     
     .detail-grid, .doc-images-grid {

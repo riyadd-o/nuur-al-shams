@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
     <title>Nuur Al Shams | Student Registration</title>
     <link rel="stylesheet" href="style.css">
-    
+
     <style>
-
-
         /* Modern Side-by-Side Split Section */
         .split-section {
             padding: 80px 20px;
@@ -96,7 +95,7 @@
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             transition: transform 0.5s ease;
         }
 
@@ -112,11 +111,31 @@
         }
 
         /* Asymmetric positioning */
-        .item-1 { grid-area: 1 / 1 / 5 / 4; } /* Large main */
-        .item-2 { grid-area: 2 / 4 / 4 / 7; } /* Wide top right */
-        .item-3 { grid-area: 5 / 1 / 7 / 3; } /* Bottom left tall */
-        .item-4 { grid-area: 4 / 3 / 7 / 6; } /* Overlapping middle */
-        .item-5 { grid-area: 4 / 6 / 6 / 7; } /* Small detail */
+        .item-1 {
+            grid-area: 1 / 1 / 5 / 4;
+        }
+
+        /* Large main */
+        .item-2 {
+            grid-area: 2 / 4 / 4 / 7;
+        }
+
+        /* Wide top right */
+        .item-3 {
+            grid-area: 5 / 1 / 7 / 3;
+        }
+
+        /* Bottom left tall */
+        .item-4 {
+            grid-area: 4 / 3 / 7 / 6;
+        }
+
+        /* Overlapping middle */
+        .item-5 {
+            grid-area: 4 / 6 / 6 / 7;
+        }
+
+        /* Small detail */
 
         @media (max-width: 968px) {
             .split-container {
@@ -124,21 +143,25 @@
                 text-align: center;
                 gap: 40px;
             }
+
             .split-desc {
                 margin-left: auto;
                 margin-right: auto;
             }
+
             .cinema-grid-asym {
                 height: 400px;
                 max-width: 500px;
                 margin: 0 auto;
             }
+
             .split-title {
                 font-size: 2.2rem;
             }
         }
     </style>
 </head>
+
 <body class="form-page">
 
     <!-- Header Section -->
@@ -184,10 +207,13 @@
             <div class="hero-bg-wave wave3"></div>
             <div class="hero-geo-overlay"></div>
         </div>
-        <div class="hero-inner container" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+        <div class="hero-inner container"
+            style="display: flex; justify-content: center; align-items: center; text-align: center;">
             <div class="hero-glass" style="padding: 40px; max-width: 800px; border-radius: 20px;">
                 <span class="hero-badge">Quran School - Ethiopia</span>
-                <h1 class="hero-title-en" style="font-size: 3.5rem; background: linear-gradient(90deg, #d4af37, #00c896); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">Join the Knowledge Journey</h1>
+                <h1 class="hero-title-en"
+                    style="font-size: 3.5rem; background: linear-gradient(90deg, #d4af37, #00c896); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">
+                    Join the Knowledge Journey</h1>
                 <div class="hero-divider" style="margin: 20px auto;"></div>
                 <h2 class="hero-title-ar">مركزة نور الشمس</h2>
                 <p class="hero-desc" style="max-width: 100%;">
@@ -204,9 +230,12 @@
             <!-- Left: Text Content -->
             <div class="split-left">
                 <span class="split-intro-badge">About Our Institution</span>
-                <h2 class="split-title">Building a Brighter<br><span style="color: var(--accent-emerald);">Spiritual Future</span></h2>
+                <h2 class="split-title">Building a Brighter<br><span style="color: var(--accent-emerald);">Spiritual
+                        Future</span></h2>
                 <p class="split-desc">
-                    At Nuur Al Shams, we believe in the transformative power of Quranic education. For over many years, we have been a beacon of knowledge in DIRE DAWA, providing free, high-quality Islamic studies to students of all levels.
+                    At Nuur Al Shams, we believe in the transformative power of Quranic education. For over many years,
+                    we have been a beacon of knowledge in DIRE DAWA, providing free, high-quality Islamic studies to
+                    students of all levels.
                 </p>
             </div>
 
@@ -241,14 +270,15 @@
             <div class="form-card" style="box-shadow: 0 0 50px rgba(0,0,0,0.5);">
                 <form id="registrationForm" novalidate>
                     <div class="form-grid">
-                        
+
                         <!-- Personal Info Group -->
                         <div class="form-section">
                             <h3 class="section-title-small">Personal Information</h3>
                             <div class="form-grid-inner">
                                 <div class="form-group full-width">
                                     <label for="studentFullName">Student Full Name</label>
-                                    <input type="text" id="studentFullName" placeholder="Enter student's full name" required>
+                                    <input type="text" id="studentFullName" placeholder="Enter student's full name"
+                                        required>
                                 </div>
                                 <div class="mobile-row">
                                     <div class="form-group">
@@ -259,8 +289,10 @@
                                     <div class="form-group">
                                         <label>Sex</label>
                                         <div class="radio-group" id="sexGroup">
-                                            <label class="radio-option"><input type="radio" name="sex" value="Male"> <span class="opt-highlight">Male</span></label>
-                                            <label class="radio-option"><input type="radio" name="sex" value="Female"> <span class="opt-highlight">Female</span></label>
+                                            <label class="radio-option"><input type="radio" name="sex" value="Male">
+                                                <span class="opt-highlight">Male</span></label>
+                                            <label class="radio-option"><input type="radio" name="sex" value="Female">
+                                                <span class="opt-highlight">Female</span></label>
                                         </div>
                                     </div>
                                 </div>
@@ -271,13 +303,16 @@
                                 <div class="form-group">
                                     <label>Student Type</label>
                                     <div class="radio-group" id="studentTypeGroup">
-                                        <label class="radio-option"><input type="radio" name="studentType" value="Regular"> <span class="opt-highlight">Regular</span></label>
-                                        <label class="radio-option"><input type="radio" name="studentType" value="New"> <span class="opt-highlight">New</span></label>
+                                        <label class="radio-option"><input type="radio" name="studentType"
+                                                value="Regular"> <span class="opt-highlight">Regular</span></label>
+                                        <label class="radio-option"><input type="radio" name="studentType" value="New">
+                                            <span class="opt-highlight">New</span></label>
                                     </div>
                                 </div>
                                 <div class="form-group full-width">
                                     <label for="phone">Family/Guardian Phone Number</label>
-                                    <input type="tel" id="phone" placeholder="e.g. 0912345678" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+                                    <input type="tel" id="phone" placeholder="e.g. 0912345678" inputmode="numeric"
+                                        oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
                                 </div>
                             </div>
                         </div>
@@ -289,36 +324,53 @@
                                 <div class="form-group full-width">
                                     <label>Medical Condition</label>
                                     <div class="radio-group" id="disabilityGroup">
-                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Dhukkuba Onnee"> <span class="opt-highlight">Dhukkuba Onnee</span></label>
-                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Dhukkuba Khalee"> <span class="opt-highlight">Dhukkuba Khalee</span></label>
-                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Gaggaba"> <span class="opt-highlight">Gaggaba</span></label>
-                                        <label class="radio-option"><input type="radio" name="medical_condition" value="None"> <span class="opt-highlight">None</span></label>
-                                        <label class="radio-option"><input type="radio" name="medical_condition" value="Other" id="disabilityOtherCheck"> <span class="opt-highlight">Other</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition"
+                                                value="Dhukkuba Onnee"> <span class="opt-highlight">Dhukkuba
+                                                Onnee</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition"
+                                                value="Dhukkuba Khalee"> <span class="opt-highlight">Dhukkuba
+                                                Khalee</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition"
+                                                value="Gaggaba"> <span class="opt-highlight">Gaggaba</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition"
+                                                value="None"> <span class="opt-highlight">None</span></label>
+                                        <label class="radio-option"><input type="radio" name="medical_condition"
+                                                value="Other" id="disabilityOtherCheck"> <span
+                                                class="opt-highlight">Other</span></label>
                                     </div>
                                     <div id="disability-other-container" style="display:none; margin-top: 15px;">
-                                        <input type="text" id="disabilityType" placeholder="Please specify your Condition">
+                                        <input type="text" id="disabilityType"
+                                            placeholder="Please specify your Condition">
                                     </div>
                                 </div>
                                 <div class="form-group full-width">
                                     <label>Level of Study</label>
                                     <div class="radio-group" id="levelGroup">
-                                        <label class="radio-option"><input type="radio" name="level" value="Quran" onchange="showLevelOptions()"> Quran</label>
-                                        <label class="radio-option"><input type="radio" name="level" value="Kitab" onchange="showLevelOptions()"> Kitab</label>
-                                        <label class="radio-option"><input type="radio" name="level" value="Aliifa" onchange="showLevelOptions()"> Aliifa</label>
+                                        <label class="radio-option"><input type="radio" name="level" value="Quran"
+                                                onchange="showLevelOptions()"> Quran</label>
+                                        <label class="radio-option"><input type="radio" name="level" value="Kitab"
+                                                onchange="showLevelOptions()"> Kitab</label>
+                                        <label class="radio-option"><input type="radio" name="level" value="Aliifa"
+                                                onchange="showLevelOptions()"> Aliifa</label>
                                     </div>
                                     <div id="quranOptions" class="level-options">
                                         <label>Selection Range:</label>
                                         <div class="radio-group">
-                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 1-10"> Juz 1-10</label>
-                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 10-20"> Juz 10-20</label>
-                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Juz 20-30"> Juz 20-30</label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail"
+                                                    value="Juz 1-10"> Juz 1-10</label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail"
+                                                    value="Juz 10-20"> Juz 10-20</label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail"
+                                                    value="Juz 20-30"> Juz 20-30</label>
                                         </div>
                                     </div>
                                     <div id="kitabOptions" class="level-options">
                                         <label>Selection Range:</label>
                                         <div class="radio-group">
-                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Usula"> <span class="opt-highlight">Usula</span></label>
-                                            <label class="radio-option"><input type="radio" name="levelDetail" value="Riyada"> <span class="opt-highlight">Riyada</span></label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail"
+                                                    value="Usula"> <span class="opt-highlight">Usula</span></label>
+                                            <label class="radio-option"><input type="radio" name="levelDetail"
+                                                    value="Riyada"> <span class="opt-highlight">Riyada</span></label>
                                         </div>
                                     </div>
                                 </div>
@@ -334,16 +386,23 @@
                                     <div class="modern-upload-card compact" id="studentUploadCard">
                                         <div class="upload-placeholder" id="studentUploadPlaceholder">
                                             <h3>Upload Student Photo</h3>
-                                            <button type="button" class="btn-upload-opt" id="btnStudentGallery">📷 Upload Photo</button>
+                                            <button type="button" class="btn-upload-opt" id="btnStudentGallery">📷
+                                                Upload Photo</button>
                                             <input type="file" id="studentPhoto" accept="image/*" hidden>
                                         </div>
-                                        <div class="upload-preview-container" id="studentPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper"><img id="studentPreview" class="preview-img-active"></div>
+                                        <div class="upload-preview-container" id="studentPreviewContainer"
+                                            style="display:none">
+                                            <div class="preview-wrapper"><img id="studentPreview"
+                                                    class="preview-img-active"></div>
                                             <div class="upload-actions">
-                                                <button type="button" class="btn-action retake" id="studentRetake">Retake</button>
-                                                <button type="button" class="btn-action use" id="studentUse">Use Photo</button>
-                                                <button type="button" class="btn-action confirm" id="studentConfirm" style="display:none">Confirm</button>
-                                                <button type="button" class="btn-close-preview" id="studentCancel">✕</button>
+                                                <button type="button" class="btn-action retake"
+                                                    id="studentRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="studentUse">Use
+                                                    Photo</button>
+                                                <button type="button" class="btn-action confirm" id="studentConfirm"
+                                                    style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview"
+                                                    id="studentCancel">✕</button>
                                             </div>
                                         </div>
                                     </div>
@@ -353,16 +412,23 @@
                                     <div class="modern-upload-card compact" id="familyUploadCard">
                                         <div class="upload-placeholder" id="familyUploadPlaceholder">
                                             <h3>Upload Family/Guardian Photo</h3>
-                                            <button type="button" class="btn-upload-opt" id="btnFamilyGallery">📷 Upload Photo</button>
+                                            <button type="button" class="btn-upload-opt" id="btnFamilyGallery">📷 Upload
+                                                Photo</button>
                                             <input type="file" id="familyPhoto" accept="image/*" hidden>
                                         </div>
-                                        <div class="upload-preview-container" id="familyPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper"><img id="familyPreview" class="preview-img-active"></div>
+                                        <div class="upload-preview-container" id="familyPreviewContainer"
+                                            style="display:none">
+                                            <div class="preview-wrapper"><img id="familyPreview"
+                                                    class="preview-img-active"></div>
                                             <div class="upload-actions">
-                                                <button type="button" class="btn-action retake" id="familyRetake">Retake</button>
-                                                <button type="button" class="btn-action use" id="familyUse">Use Photo</button>
-                                                <button type="button" class="btn-action confirm" id="familyConfirm" style="display:none">Confirm</button>
-                                                <button type="button" class="btn-close-preview" id="familyCancel">✕</button>
+                                                <button type="button" class="btn-action retake"
+                                                    id="familyRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="familyUse">Use
+                                                    Photo</button>
+                                                <button type="button" class="btn-action confirm" id="familyConfirm"
+                                                    style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview"
+                                                    id="familyCancel">✕</button>
                                             </div>
                                         </div>
                                     </div>
@@ -387,15 +453,22 @@
                                     <div class="modern-upload-card premium-id-card" id="nationalIDCard">
                                         <div class="upload-placeholder" id="idPlaceholder">
                                             <h3 id="idStepTitle">Upload student ID</h3>
-                                            <button type="button" class="btn-upload-opt" id="btnIDGallery">📷 Upload Photo</button>
+                                            <button type="button" class="btn-upload-opt" id="btnIDGallery">📷 Upload
+                                                Photo</button>
                                             <input type="file" id="idFileInput" accept="image/*" hidden>
                                         </div>
-                                        <div class="upload-preview-container" id="idPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper" style="display:flex;justify-content:center;align-items:center;"><img id="idPreview" class="preview-img-active"></div>
+                                        <div class="upload-preview-container" id="idPreviewContainer"
+                                            style="display:none">
+                                            <div class="preview-wrapper"
+                                                style="display:flex;justify-content:center;align-items:center;"><img
+                                                    id="idPreview" class="preview-img-active"></div>
                                             <div class="upload-actions">
-                                                <button type="button" class="btn-action retake" id="btnIDRetake">Retake</button>
-                                                <button type="button" class="btn-action use" id="btnIDUse">Use Photo</button>
-                                                <button type="button" class="btn-action confirm" id="btnIDConfirm" style="display:none">Confirm</button>
+                                                <button type="button" class="btn-action retake"
+                                                    id="btnIDRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="btnIDUse">Use
+                                                    Photo</button>
+                                                <button type="button" class="btn-action confirm" id="btnIDConfirm"
+                                                    style="display:none">Confirm</button>
                                             </div>
                                         </div>
                                         <button type="button" class="btn-close-preview" id="btnIDReset">✕</button>
@@ -413,16 +486,23 @@
                                     <div class="modern-upload-card premium-id-card" id="guardianIDUploadCard">
                                         <div class="upload-placeholder" id="guardianIDUploadPlaceholder">
                                             <h3>Upload family/Guardian ID</h3>
-                                            <button type="button" class="btn-upload-opt" id="btnGuardianIDGallery">📷 Upload Photo</button>
+                                            <button type="button" class="btn-upload-opt" id="btnGuardianIDGallery">📷
+                                                Upload Photo</button>
                                             <input type="file" id="guardianIDPhoto" accept="image/*" hidden>
                                         </div>
-                                        <div class="upload-preview-container" id="guardianIDPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper"><img id="guardianIDPreview" class="preview-img-active"></div>
+                                        <div class="upload-preview-container" id="guardianIDPreviewContainer"
+                                            style="display:none">
+                                            <div class="preview-wrapper"><img id="guardianIDPreview"
+                                                    class="preview-img-active"></div>
                                             <div class="upload-actions">
-                                                <button type="button" class="btn-action retake" id="guardianIDRetake">Retake</button>
-                                                <button type="button" class="btn-action use" id="guardianIDUse">Use Photo</button>
-                                                <button type="button" class="btn-action confirm" id="guardianIDConfirm" style="display:none">Confirm</button>
-                                                <button type="button" class="btn-close-preview" id="guardianIDCancel">✕</button>
+                                                <button type="button" class="btn-action retake"
+                                                    id="guardianIDRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="guardianIDUse">Use
+                                                    Photo</button>
+                                                <button type="button" class="btn-action confirm" id="guardianIDConfirm"
+                                                    style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview"
+                                                    id="guardianIDCancel">✕</button>
                                             </div>
                                         </div>
                                     </div>
@@ -443,28 +523,61 @@
                                 <div class="form-group full-width">
                                     <label>Payment Method</label>
                                     <div class="radio-group payment-radio-group">
-                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="Cash" onchange="showPaymentInfo()"> <span style="font-size:1.3rem; line-height:1;">💵</span> <span>Cash</span></label>
-                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="EBirr" onchange="showPaymentInfo()"> <img src="EBirr.webp" alt="EBirr Logo" class="payment-radio-logo"> <span>EBirr</span></label>
-                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="CBE" onchange="showPaymentInfo()"> <img src="CBE.png" alt="CBE Logo" class="payment-radio-logo"> <span>CBE</span></label>
-                                        <label class="radio-option payment-option"><input type="radio" name="paymentMethod" value="Bank of Oromia" onchange="showPaymentInfo()"> <img src="Oromia%20Bank.png" alt="Bank of Oromia Logo" class="payment-radio-logo"> <span>Bank of Oromia</span></label>
+                                        <label class="radio-option payment-option"><input type="radio"
+                                                name="paymentMethod" value="Cash" onchange="showPaymentInfo()"> <span
+                                                style="font-size:1.3rem; line-height:1;">💵</span>
+                                            <span>Cash</span></label>
+                                        <label class="radio-option payment-option"><input type="radio"
+                                                name="paymentMethod" value="EBirr" onchange="showPaymentInfo()"> <img
+                                                src="EBirr.webp" alt="EBirr Logo" class="payment-radio-logo">
+                                            <span>EBirr</span></label>
+                                        <label class="radio-option payment-option"><input type="radio"
+                                                name="paymentMethod" value="CBE" onchange="showPaymentInfo()"> <img
+                                                src="CBE.png" alt="CBE Logo" class="payment-radio-logo">
+                                            <span>CBE</span></label>
+                                        <label class="radio-option payment-option"><input type="radio"
+                                                name="paymentMethod" value="Bank of Oromia"
+                                                onchange="showPaymentInfo()"> <img src="Oromia%20Bank.png"
+                                                alt="Bank of Oromia Logo" class="payment-radio-logo"> <span>Bank of
+                                                Oromia</span></label>
                                     </div>
                                     <div id="paymentInfo" class="payment-cards-container" style="display:none">
-                                        <div class="payment-bank-card ebirr" id="cardEBirr" style="display:none"><div class="bank-card-label">Send payment to <strong>EBirr</strong></div><div class="bank-card-number">09-91-28-95-26</div></div>
-                                        <div class="payment-bank-card cbe" id="cardCBE" style="display:none"><div class="bank-card-label">Send payment to <strong>CBE</strong></div><div class="bank-card-number">1000-64-64-14-621</div></div>
-                                        <div class="payment-bank-card oromia" id="cardOromia" style="display:none"><div class="bank-card-label">Send payment to <strong>Bank of Oromia</strong></div><div class="bank-card-number">00-23-56-79-427</div></div>
+                                        <div class="payment-bank-card ebirr" id="cardEBirr" style="display:none">
+                                            <div class="bank-card-label">Send payment to <strong>EBirr</strong></div>
+                                            <div class="bank-card-number">09-91-28-95-26</div>
+                                        </div>
+                                        <div class="payment-bank-card cbe" id="cardCBE" style="display:none">
+                                            <div class="bank-card-label">Send payment to <strong>CBE</strong></div>
+                                            <div class="bank-card-number">1000-64-64-14-621</div>
+                                        </div>
+                                        <div class="payment-bank-card oromia" id="cardOromia" style="display:none">
+                                            <div class="bank-card-label">Send payment to <strong>Bank of Oromia</strong>
+                                            </div>
+                                            <div class="bank-card-number">00-23-56-79-427</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group full-width" id="receiptUploadSection" style="display:none">
-                                    <label>Upload Payment Receipt</label>
+                                    <label>Payment Receipt</label>
                                     <div class="modern-upload-card compact" id="receiptUploadCard">
-                                        <div class="upload-placeholder" id="receiptUploadPlaceholder"><h3>Upload Payment Receipt</h3><button type="button" class="btn-upload-opt" id="btnReceiptGallery">🧾 Upload Receipt</button><input type="file" id="receiptPhoto" accept="image/*" hidden></div>
-                                        <div class="upload-preview-container" id="receiptPreviewContainer" style="display:none">
-                                            <div class="preview-wrapper"><img id="receiptPreview" class="preview-img-active"></div>
+                                        <div class="upload-placeholder" id="receiptUploadPlaceholder">
+                                            <h3>Upload Payment Receipt</h3><button type="button" class="btn-upload-opt"
+                                                id="btnReceiptGallery">🧾 Upload Receipt</button><input type="file"
+                                                id="receiptPhoto" accept="image/*" hidden>
+                                        </div>
+                                        <div class="upload-preview-container" id="receiptPreviewContainer"
+                                            style="display:none">
+                                            <div class="preview-wrapper"><img id="receiptPreview"
+                                                    class="preview-img-active"></div>
                                             <div class="upload-actions">
-                                                <button type="button" class="btn-action retake" id="receiptRetake">Retake</button>
-                                                <button type="button" class="btn-action use" id="receiptUse">Use Photo</button>
-                                                <button type="button" class="btn-action confirm" id="receiptConfirm" style="display:none">Confirm</button>
-                                                <button type="button" class="btn-close-preview" id="receiptCancel">✕</button>
+                                                <button type="button" class="btn-action retake"
+                                                    id="receiptRetake">Retake</button>
+                                                <button type="button" class="btn-action use" id="receiptUse">Use
+                                                    Photo</button>
+                                                <button type="button" class="btn-action confirm" id="receiptConfirm"
+                                                    style="display:none">Confirm</button>
+                                                <button type="button" class="btn-close-preview"
+                                                    id="receiptCancel">✕</button>
                                             </div>
                                         </div>
                                     </div>
@@ -484,7 +597,8 @@
         <div class="success-icon">✔</div>
         <h2>Registration Completed Successfully</h2>
         <p>Your student records have been saved to the Nuur Al Shams.</p>
-        <div class="success-actions"><button onclick="goToHome()" class="btn-success-main" style="width: auto; padding: 15px 60px;">Return to Home</button></div>
+        <div class="success-actions"><button onclick="goToHome()" class="btn-success-main"
+                style="width: auto; padding: 15px 60px;">Return to Home</button></div>
     </div>
 
     <!-- Footer -->
@@ -492,7 +606,8 @@
         <div class="container">
             <div class="footer-logo">Markaz Nuur Al Shams</div>
             <p class="footer-quote">"Empowering students through Quran and knowledge."</p>
-            <p style="margin-top: 20px; color: var(--text-gray); font-size: 0.8rem;">&copy; 2026 Nuur Al Shams. All rights reserved.</p>
+            <p style="margin-top: 20px; color: var(--text-gray); font-size: 0.8rem;">&copy; 2026 Nuur Al Shams. All
+                rights reserved.</p>
         </div>
     </footer>
 
@@ -503,4 +618,5 @@
         function goToHome() { window.location.href = 'index.html'; }
     </script>
 </body>
+
 </html>

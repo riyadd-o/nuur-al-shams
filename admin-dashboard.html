@@ -64,6 +64,47 @@
             backdrop-filter: blur(8px);
             z-index: 2400;
         }
+        /* Payment Approved UI */
+        .payment-approved {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .payment-approved-method {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .payment-approved-amount {
+            font-size: 0.95rem;
+            color: #2ecc71;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .payment-check-icon {
+            color: #2ecc71;
+            font-size: 0.9rem;
+        }
+        .btn-pending {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-pending:hover {
+            background: rgba(241, 196, 15, 0.2);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -173,6 +214,18 @@
                             <p id="det-name">-</p>
                         </div>
                         <div class="detail-item">
+                            <label>Type</label>
+                            <p id="det-type">-</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone</label>
+                            <p id="det-phone">-</p>
+                        </div>
+                        <div class="detail-item full-width">
+                            <label>Level</label>
+                            <p id="det-level">-</p>
+                        </div>
+                        <div class="detail-item">
                             <label>Age</label>
                             <p id="det-age">-</p>
                         </div>
@@ -207,12 +260,12 @@
                             <img id="det-family-photo" src="" alt="Family Photo">
                         </div>
                         <div class="doc-box full-width">
-                            <label>National ID - Front</label>
-                            <img id="det-id-front" src="" alt="National ID Front">
+                            <label>Student ID</label>
+                            <img id="det-id-front" src="" alt="Student ID">
                         </div>
                         <div class="doc-box full-width">
-                            <label>National ID - Back</label>
-                            <img id="det-id-back" src="" alt="National ID Back">
+                            <label>Family/Guardian ID</label>
+                            <img id="det-guardian-id" src="" alt="Family/Guardian ID">
                         </div>
                     </div>
                 </div>
@@ -221,7 +274,7 @@
                     <div class="payment-summary">
                          <div class="detail-item">
                             <label>Status</label>
-                            <p class="status-paid">Paid <span class="pay-check-v2">✔</span></p>
+                            <p class="status-paid" id="det-payment-status">Paid <span class="pay-check-v2">✔</span></p>
                         </div>
                         <div class="detail-item">
                             <label>Amount</label>
@@ -284,6 +337,55 @@
                 }
                 input.value = '';
                 renderTable(students);
+            };
+
+            window.approvePayment = async function(event, studentId) {
+                event.stopPropagation();
+                
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = "Approving...";
+                btn.disabled = true;
+
+                try {
+                    // Update database
+                    const { error } = await supabase
+                        .from('students')
+                        .update({ is_payment_approved: true })
+                        .eq('id', studentId);
+
+                    if (error) {
+                        if (error.message.includes('column "is_payment_approved" of relation "students" does not exist')) {
+                            alert("Please create a boolean column named 'is_payment_approved' in your 'students' table in Supabase (default: false).");
+                        }
+                        throw error;
+                    }
+
+                    const student = students.find(s => s.id === studentId);
+                    if (student) {
+                        student.is_payment_approved = true;
+                        const payContainer = document.getElementById(`pay-container-${studentId}`);
+                        if (payContainer) {
+                            let amount = 0;
+                            if (student.level_of_study) {
+                                if (student.level_of_study.includes('Quran')) amount = 500;
+                                else if (student.level_of_study.includes('Kitab')) amount = 600;
+                                else if (student.level_of_study.includes('Aliifa')) amount = 400;
+                            }
+                            payContainer.innerHTML = `
+                                <div class="payment-approved">
+                                    <span class="payment-approved-method">${student.payment_method || 'EBirr'}</span>
+                                    <span class="payment-approved-amount">${amount} <span class="payment-check-icon">✔</span></span>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (err) {
+                    console.error("Payment approval error:", err);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    alert("Failed to approve payment: " + err.message);
+                }
             };
 
 
@@ -421,7 +523,9 @@
                         if (!dateStr) return 'N/A';
                         const date = new Date(dateStr);
                         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        return `${months[date.getMonth()]}-${date.getDate()}-${date.getFullYear().toString().slice(-2)}`;
+                        const hh = date.getHours().toString().padStart(2, '0');
+                        const mm = date.getMinutes().toString().padStart(2, '0');
+                        return `${months[date.getMonth()]}-${date.getDate()}-${date.getFullYear().toString().slice(-2)}-${hh}:${mm}`;
                     };
 
                     const row = document.createElement('tr');
@@ -440,9 +544,15 @@
                         <td>${student.level_of_study || 'N/A'}</td>
                         <td style="font-size: 0.85rem; color: var(--text-gray);">${formattedDate(student.created_at)}</td>
                         <td>
-                            <div class="pay-column-v2">
-                                <span class="pay-method-v2">${method}</span>
-                                <span class="pay-amount-v2">${amount} <span class="pay-check-v2">✔</span></span>
+                            <div id="pay-container-${student.id}">
+                                ${student.is_payment_approved ? `
+                                <div class="payment-approved">
+                                    <span class="payment-approved-method">${method}</span>
+                                    <span class="payment-approved-amount">${amount} <span class="payment-check-icon">✔</span></span>
+                                </div>
+                                ` : `
+                                <button class="btn-pending" onclick="approvePayment(event, '${student.id}')">Pending</button>
+                                `}
                             </div>
                         </td>
                         <td><a href="#" class="detail-link" onclick="openStudentDetail('${student.id}'); return false;">Detail</a></td>
@@ -614,6 +724,12 @@
                 
                 // Populate Info
                 document.getElementById('det-name').innerText = student.full_name || 'N/A';
+                document.getElementById('det-type').innerText = student.student_type || 'N/A';
+                document.getElementById('det-phone').innerText = student.phone || 'N/A';
+                
+                const levelEl = document.getElementById('det-level');
+                if (levelEl) levelEl.innerText = student.level_of_study || 'N/A';
+                
                 document.getElementById('det-age').innerText = student.age || 'N/A';
                 document.getElementById('det-sex').innerText = student.sex || 'N/A';
                 document.getElementById('det-kebele').innerText = student.kebele || 'N/A';
@@ -633,7 +749,7 @@
                 setImg('det-student-photo', student.student_photo_url);
                 setImg('det-family-photo', student.family_photo_url);
                 setImg('det-id-front', student.id_front_url);
-                setImg('det-id-back', student.id_back_url);
+                setImg('det-guardian-id', student.guardian_id_url);
                 setImg('det-receipt', student.receipt_url);
 
                 // Populate Payment
@@ -643,17 +759,37 @@
                     else if (student.level_of_study.includes('Kitab')) amount = 600;
                     else if (student.level_of_study.includes('Aliifa')) amount = 400;
                 }
-                document.getElementById('det-payment-amount').innerText = amount > 0 ? amount + ' ETB' : 'N/A';
+                const amtEl = document.getElementById('det-payment-amount');
+                const statusEl = document.getElementById('det-payment-status');
+                if (student.is_payment_approved) {
+                    amtEl.innerText = amount > 0 ? amount + ' ETB' : 'N/A';
+                    amtEl.style.color = '#2ecc71'; /* Green */
+                    if (statusEl) {
+                        statusEl.innerHTML = `Approved <span class="payment-check-icon">✔</span>`;
+                        statusEl.style.color = '#2ecc71';
+                    }
+                } else {
+                    amtEl.innerText = 'Pending';
+                    amtEl.style.color = '#f1c40f'; /* Yellow pending */
+                    if (statusEl) {
+                        statusEl.innerHTML = `Pending`;
+                        statusEl.style.color = '#f1c40f';
+                    }
+                }
                 document.getElementById('det-payment-bank').innerText = student.payment_method || 'EBirr';
 
                 // Open Modal
                 document.getElementById('studentDetailModal').classList.add('active');
+                // Prevent body scroll
+                document.body.style.overflow = 'hidden';
                 // Reset tabs to info
                 openDetailTab(null, 'info');
             };
 
             window.closeStudentDetail = function() {
                 document.getElementById('studentDetailModal').classList.remove('active');
+                // Restore body scroll
+                document.body.style.overflow = '';
             };
 
             window.openDetailTab = function(event, tabId) {
