@@ -297,8 +297,9 @@
             overflow: hidden;
             background: #fff; /* Fallback */
             margin: 0 auto 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             font-family: 'Poppins', 'Segoe UI', sans-serif;
+            border: none !important; /* Forcefully remove global border */
+            box-shadow: none !important; /* Ensure no shadows are captured */
         }
 
         .id-card .bg {
@@ -354,35 +355,51 @@
 
         /* Barcode CSS removed - using background barcode */
 
-        .btn-generate-id {
-            background: #d4af37;
-            color: #000;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
+        .btn-generate-id, .btn-download-id {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(180, 148, 31, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #b4941f; /* Dark gold */
+            border: 1px solid rgba(180, 148, 31, 0.3);
+            padding: 12px 28px;
+            border-radius: 12px;
             font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .btn-download-id {
-            background: #00a86b;
-            color: #fff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.3);
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(180, 148, 31, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: pulse-glow-gold 2.5s infinite alternate;
         }
 
-        .btn-download-id:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.5);
-            background: #008f5a;
+        .btn-generate-id::before, .btn-download-id::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(180, 148, 31, 0.3), transparent);
+            transform: skewX(-25deg);
+            animation: shimmer 3s infinite;
+        }
+
+        .btn-generate-id:hover, .btn-download-id:hover {
+            background: rgba(180, 148, 31, 0.2);
+            color: #fff;
+            border-color: rgba(180, 148, 31, 0.6);
+            box-shadow: 0 0 20px rgba(180, 148, 31, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        @keyframes pulse-glow-gold {
+            0% { box-shadow: 0 0 8px rgba(180, 148, 31, 0.2); border-color: rgba(180, 148, 31, 0.2); }
+            100% { box-shadow: 0 0 20px rgba(180, 148, 31, 0.5); border-color: rgba(180, 148, 31, 0.6); }
         }
     </style>
 </head>
@@ -763,7 +780,7 @@
                             <p><span class="label">Sex:</span> <span class="value">${student.sex || 'N/A'}</span></p>
                             <p><span class="label">Level:</span> <span class="value">${student.level_of_study || 'N/A'}</span></p>
                             <p><span class="label">Batch:</span> <span class="value">2026</span></p>
-                            <p><span class="label">ID:</span> <span class="value">${student.student_id || '----'}</span></p>
+                            <p><span class="label">ID:</span> <span class="value" style="color: #b4941f !important;">${student.student_id || '----'}</span></p>
                         </div>
                     </div>
                 `;
