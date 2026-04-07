@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- HTML2Canvas for ID Export -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- JsBarcode for Barcode Generation -->
+    <!-- Removed by user request - the background already has a barcode -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script> -->
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* Dashbord/Edit specific modal styling */
         .edit-modal {
@@ -24,6 +31,44 @@
             width: 90%;
             max-width: 500px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .id-badge-glass {
+            display: inline-block;
+            color: #00e5ff;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            text-transform: uppercase;
+            animation: id-pulse 2.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes id-pulse {
+            0% { 
+                opacity: 0.8;
+                text-shadow: 0 0 4px rgba(0, 229, 255, 0.2);
+            }
+            100% { 
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+            }
+        }
+
+
+        /* ── Dashboard Enhancements ── */
+        .table-container {
+            -webkit-overflow-scrolling: touch;
+            overflow-x: auto;
+        }
+
+        #studentsTable th:nth-child(4) { /* The ID column title */
+            text-align: center !important;
+            padding-left: 30px !important; /* Move slightly right as requested */
+        }
+
+        #studentsTable td:nth-child(4) {
+            text-align: center;
         }
         .edit-modal h3 {
             color: var(--accent-gold);
@@ -242,6 +287,103 @@
                 padding-right: 90px !important; /* Make room for the inline button */
             }
         }
+
+        /* ── Finalized ID Card Design (Safe for Export) ── */
+        .id-card {
+            width: 340px;
+            height: 200px;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff; /* Fallback */
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        .id-card .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .id-card .student-photo {
+            position: absolute;
+            top: 50px;
+            left: 25px;
+            width: 105px;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: none;
+            z-index: 2;
+        }
+
+        .id-card .info {
+            position: absolute;
+            top: 45px;
+            left: 140px;
+            width: 170px;
+            max-height: 110px;
+            overflow: hidden;
+            z-index: 2;
+            color: #2c2c2c;
+            text-align: left;
+        }
+
+        .id-card .info p {
+            margin: 4px 0;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+
+        .id-card .label {
+            font-weight: 600;
+            color: #1e4d3a; /* elegant green */
+            letter-spacing: 0.3px;
+        }
+
+        .id-card .value {
+            font-weight: 700;
+            color: #111;
+        }
+
+        /* Barcode CSS removed - using background barcode */
+
+        .btn-generate-id {
+            background: #d4af37;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .btn-download-id {
+            background: #00a86b;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-download-id:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 107, 0.5);
+            background: #008f5a;
+        }
     </style>
 </head>
 <body>
@@ -279,24 +421,14 @@
         </div>
 
         <!-- Table Controls -->
-        <div class="sticky-search-container" style="display: flex; justify-content: space-between; margin-bottom: 20px; gap: 20px; flex-wrap: wrap; align-items: flex-end;">
-            <div style="flex: 1; max-width: 400px;">
-                <p id="searchLabel" style="font-size: 0.75rem; color: var(--text-gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; padding-left: 15px;">Search by Name</p>
-                <div style="position: relative;">
-                    <input type="text" class="search-bar" id="studentSearch" placeholder="Insert name..." oninput="filterStudents()" style="padding-right: 45px;">
-                    <button onclick="toggleSearchMode()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--accent-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;" title="Toggle Search Mode">
-                        <svg id="searchModeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 2.1l4 4-4 4"></path>
-                            <path d="M3 12.2v-2a4 4 0 0 1 4-4h14"></path>
-                            <path d="M7 21.9l-4-4 4-4"></path>
-                            <path d="M21 11.8v2a4 4 0 0 1-4 4H3"></path>
-                        </svg>
-                    </button>
-                </div>
+        <div class="sticky-search-container" style="display: flex; justify-content: flex-start; margin-bottom: 20px; padding-left: 10px;">
+            <div style="width: 100%; max-width: 400px; text-align: left;">
+                <p style="font-size: 0.75rem; color: var(--text-gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; padding-left: 5px;">SEARCH STUDENT</p>
+                <input type="text" class="search-bar" id="studentSearch" placeholder="Insert ID..." oninput="filterStudents()" style="margin-left: 0;">
             </div>
             
             <!-- Selection Area (Top Right) -->
-            <div id="selectionBar" class="selection-bar" style="margin-bottom: 5px;">
+            <div id="selectionBar" class="selection-bar" style="position: absolute; right: 20px; top: 15px;">
                 <span class="selection-count">Select (0)</span>
                 <button id="deleteSelectedBtn" class="btn-batch-delete" onclick="openDeleteModal()" title="Delete Selected">🗑️</button>
                 <button class="btn-exit-selection" onclick="exitSelectionMode()">Exit</button>
@@ -312,8 +444,8 @@
                         <th class="row-checkbox-cell"></th>
                         <th>Photo</th>
                         <th>Name</th>
+                        <th>ID</th>
                         <th>Type</th>
-                        <th>Phone</th>
                         <th>Level</th>
                         <th>Date</th>
                         <th>Payment</th>
@@ -421,15 +553,25 @@
                         </div>
                         <div class="doc-box">
                             <label>Family/Guardian</label>
-                            <img id="det-family-photo" src="" alt="Family Photo">
+                            <img id="det-family-photo" crossorigin="anonymous" src="" alt="Family Photo">
                         </div>
                         <div class="doc-box full-width">
                             <label>Student ID</label>
-                            <img id="det-id-front" src="" alt="Student ID">
+                            <img id="det-id-front" crossorigin="anonymous" src="" alt="Student ID">
                         </div>
                         <div class="doc-box full-width">
                             <label>Family/Guardian ID</label>
-                            <img id="det-guardian-id" src="" alt="Family/Guardian ID">
+                            <img id="det-guardian-id" crossorigin="anonymous" src="" alt="Family/Guardian ID">
+                        </div>
+                        <div id="id-generation-section" class="doc-box full-width" style="display:none; border-top: 1.5px dashed #d4af37; margin-top: 25px; padding-top: 25px;">
+                            <label style="color: #d4af37 !important;">Ready for ID Card Generation</label>
+                            <div id="student-id-card-wrap">
+                                <!-- ID Card UI will be generated here -->
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 15px; width: 100%;">
+                                <button id="btnGenerateID" class="btn-generate-id" onclick="generateStudentID()">Generate ID Card</button>
+                                <button id="btnDownloadID" class="btn-download-id" style="display:none;" onclick="downloadIDCard()">Download ID Card</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -554,6 +696,131 @@
 
 
             // 3. Data Loading
+            // HELPER: Generate Unique Student ID
+            async function createUniqueStudentID(registrationDate) {
+                const year = new Date(registrationDate).getFullYear().toString().slice(-2);
+                const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                
+                let isUnique = false;
+                let finalID = "";
+
+                while (!isUnique) {
+                    const randLetters = letters[Math.floor(Math.random() * 26)] + letters[Math.floor(Math.random() * 26)];
+                    const randNums = Math.floor(100 + Math.random() * 900).toString(); // 3 digits
+                    finalID = `${year}${randLetters}${randNums}`;
+
+                    // Check Supabase for duplicates
+                    const { data } = await supabase.from('students').select('student_id').eq('student_id', finalID);
+                    if (!data || data.length === 0) isUnique = true;
+                }
+                return finalID;
+            }
+
+            window.generateStudentID = async function() {
+                const studentId = document.getElementById('det-id').value;
+                const student = students.find(s => s.id === studentId);
+                if (!student) return;
+
+                const btn = document.getElementById('btnGenerateID');
+                btn.innerText = "Generating...";
+                btn.disabled = true;
+
+                try {
+                    const newID = await createUniqueStudentID(student.created_at);
+                    
+                    const { error } = await supabase
+                        .from('students')
+                        .update({ student_id: newID })
+                        .eq('id', studentId);
+
+                    if (error) throw error;
+
+                    student.student_id = newID;
+                    renderTable(students);
+                    showIDCardUI(student);
+                    
+                    btn.style.display = 'none';
+                    document.getElementById('btnDownloadID').style.display = 'block';
+
+                } catch (err) {
+                    console.error("ID Generation failed:", err);
+                    alert("Failed to generate ID");
+                    btn.innerText = "Generate ID";
+                    btn.disabled = false;
+                }
+            };
+
+            function showIDCardUI(student) {
+                const wrap = document.getElementById('student-id-card-wrap');
+                const bgUrl = "https://cegsatrugfhtiwkasicg.supabase.co/storage/v1/object/public/id_asset/id-di.png";
+                
+                wrap.innerHTML = `
+                    <div id="idCardToExport" class="id-card">
+                        <img src="${bgUrl}" class="bg" crossorigin="anonymous">
+                        <img id="card-photo-img" src="${student.student_photo_url || 'https://via.placeholder.com/100'}" class="student-photo" crossorigin="anonymous">
+                        <div class="info">
+                            <p><span class="label">Name:</span> <span class="value">${student.full_name || 'N/A'}</span></p>
+                            <p><span class="label">Sex:</span> <span class="value">${student.sex || 'N/A'}</span></p>
+                            <p><span class="label">Level:</span> <span class="value">${student.level_of_study || 'N/A'}</span></p>
+                            <p><span class="label">Batch:</span> <span class="value">2026</span></p>
+                            <p><span class="label">ID:</span> <span class="value">${student.student_id || '----'}</span></p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            window.downloadIDCard = function() {
+                const element = document.getElementById('idCardToExport');
+                const btn = document.getElementById('btnDownloadID');
+                if (!element) return;
+
+                const originalBtnText = btn.innerText;
+                btn.innerText = "Processing...";
+                btn.disabled = true;
+
+                // Ensure all images are loaded before capturing
+                const images = element.querySelectorAll('img');
+                const imagePromises = Array.from(images).map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(resolve => {
+                        img.onload = resolve;
+                        img.onerror = resolve;
+                    });
+                });
+
+                Promise.all(imagePromises).then(() => {
+                    setTimeout(() => {
+                        html2canvas(element, {
+                            scale: 3,
+                            useCORS: true,
+                            backgroundColor: null
+                        }).then(canvas => {
+                            canvas.toBlob(function(blob) {
+                                if (!blob) {
+                                    alert("Export failed. Please try again.");
+                                    btn.innerText = originalBtnText;
+                                    btn.disabled = false;
+                                    return;
+                                }
+                                const link = document.createElement("a");
+                                link.href = URL.createObjectURL(blob);
+                                link.download = "student-id.png";
+                                link.click();
+                                
+                                // Reset button
+                                btn.innerText = originalBtnText;
+                                btn.disabled = false;
+                            }, 'image/png');
+                        }).catch(err => {
+                            console.error("Export error:", err);
+                            alert("Export error occurred.");
+                            btn.innerText = originalBtnText;
+                            btn.disabled = false;
+                        });
+                    }, 500); // 500ms safety delay
+                });
+            };
+
             // HELPER: Extract Storage Path from Public URL
             function getStoragePath(url) {
                 if (!url) return null;
@@ -696,6 +963,15 @@
                     if (isSelected) row.classList.add('selected');
                     row.id = `row-${student.id}`;
                     
+                    const formatIDParts = (id) => {
+                        if (!id || id.length < 7) return id || '-';
+                        // Expected format YYLLNNN (2 digits, 2 letters, 3 numbers)
+                        const yy = id.slice(0, 2);
+                        const ll = id.slice(2, 4);
+                        const nnn = id.slice(4);
+                        return `${yy} ${ll} ${nnn}`;
+                    };
+
                     row.innerHTML = `
                         <td class="row-checkbox-cell">
                             <input type="checkbox" class="row-checkbox" ${isSelected ? 'checked' : ''} 
@@ -703,8 +979,8 @@
                         </td>
                         <td><img src="${student.student_photo_url || 'https://via.placeholder.com/50'}" class="student-thumb"></td>
                         <td style="font-weight: 500;">${student.full_name || 'N/A'}</td>
+                        <td><span class="id-badge-glass">${formatIDParts(student.student_id)}</span></td>
                         <td><span class="type-badge ${typeClass}">${typeLabel}</span></td>
-                        <td>${student.phone || 'N/A'}</td>
                         <td>${student.level_of_study || 'N/A'}</td>
                         <td style="font-size: 0.85rem; color: var(--text-gray);">${formattedDate(student.created_at)}</td>
                         <td>
@@ -862,11 +1138,7 @@
             window.filterStudents = function() {
                 const query = document.getElementById('studentSearch').value.toLowerCase();
                 const filtered = students.filter(s => {
-                    if (searchMode === 'name') {
-                        return s.full_name && s.full_name.toLowerCase().includes(query);
-                    } else {
-                        return s.phone && s.phone.toLowerCase().includes(query);
-                    }
+                    return s.student_id && s.student_id.toLowerCase().includes(query);
                 });
                 renderTable(filtered);
 
@@ -993,6 +1265,27 @@
 
                 // Hide all confirm buttons initially
                 document.querySelectorAll('.inline-confirm-btn').forEach(btn => btn.style.display = 'none');
+
+                // ID Generation Visibility Logic
+                const idSection = document.getElementById('id-generation-section');
+                const btnGen = document.getElementById('btnGenerateID');
+                const btnExp = document.getElementById('btnDownloadID');
+                const idWrap = document.getElementById('student-id-card-wrap');
+
+                if (student.is_payment_approved) {
+                    idSection.style.display = 'block';
+                    if (student.student_id) {
+                        btnGen.style.display = 'none';
+                        btnExp.style.display = 'block';
+                        showIDCardUI(student);
+                    } else {
+                        btnGen.style.display = 'block';
+                        btnExp.style.display = 'none';
+                        idWrap.innerHTML = '';
+                    }
+                } else {
+                    idSection.style.display = 'none';
+                }
 
                 // Populate Images
                 const setImg = (id, url) => {
